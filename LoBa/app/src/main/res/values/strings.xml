@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LoBa</string>
+
+    <string name="title_activity_specials">LoBa Specials</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>
