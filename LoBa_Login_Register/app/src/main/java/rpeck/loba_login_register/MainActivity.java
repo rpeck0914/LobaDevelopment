@@ -11,6 +11,8 @@ import android.widget.EditText;
 
 public class MainActivity extends Activity implements View.OnClickListener{
 
+    //THIS COMMENT IS A TEST. DELETE ME.
+
     private Button mButtonLogout;
     private EditText mEnterUserName;
     private UserLocalStore userLocalStore;
