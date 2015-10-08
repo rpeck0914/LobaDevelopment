@@ -1,6 +1,7 @@
 package rpeck.loba_login_register;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +20,7 @@ public class Register extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_register);
 
         mEnterName = (EditText) findViewById(R.id.enter_name);
-        mEnterUserName = (EditText) findViewById(R.id.enter_username);
+        mEnterUserName = (EditText) findViewById(R.id.enter_userName);
         mEnterPassword = (EditText) findViewById(R.id.enter_Password);
 
         mButtonRegister = (Button) findViewById(R.id.button_register);
@@ -35,9 +36,21 @@ public class Register extends Activity implements View.OnClickListener{
                 String username = mEnterUserName.getText().toString();
                 String password = mEnterPassword.getText().toString();
 
-                User registeredData = new User(name, username, password);
+                User user = new User(name, username, password);
 
+                registerUser(user);
                 break;
         }
+    }
+
+    private void registerUser(User user) {
+        ServerRequests serverRequests = new ServerRequests(this);
+        serverRequests.storeUserDataInBackground(user, new GetUserCallback() {
+            @Override
+            public void done(User returnedUser) {
+                startActivity(new Intent(Register.this, Login.class));
+            }
+        });
+
     }
 }

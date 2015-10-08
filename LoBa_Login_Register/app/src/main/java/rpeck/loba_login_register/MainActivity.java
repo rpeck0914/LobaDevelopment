@@ -34,6 +34,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         if(authenticate() == true) {
             displayUserDetails();
+        } else {
+            startActivity(new Intent(MainActivity.this, Login.class));
         }
 
     }

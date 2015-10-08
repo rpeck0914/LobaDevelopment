@@ -1,6 +1,7 @@
 package rpeck.loba_login_register;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,16 +40,44 @@ public class Login extends Activity implements View.OnClickListener {
 
         switch (v.getId()) {
             case  R.id.button_login:
-                User user = new User(null, null);
-                
-                userLocalStore.storeUserData(user);
-                userLocalStore.setUserLoggedIn(true);
+                String username = mEnterUserName.getText().toString();
+                String password = mEnterPassword.getText().toString();
 
+                User user = new User(username, password);
+
+                authenticate(user);
                 break;
 
             case R.id.register_link:
                 startActivity(new Intent(this, Register.class));
                 break;
         }
+    }
+
+    private void authenticate(User user) {
+        ServerRequests serverRequests = new ServerRequests(this);
+        serverRequests.fetchUserDataInBackground(user, new GetUserCallback() {
+            @Override
+            public void done(User returnedUser) {
+                if(returnedUser == null) {
+                    showErrorMessage();
+                } else {
+                    logUserIn(returnedUser);
+                }
+            }
+        });
+    }
+
+    private void showErrorMessage() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Login.this);
+        dialogBuilder.setMessage("Incorrect User Detail");
+        dialogBuilder.setPositiveButton("OK", null);
+        dialogBuilder.show();
+    }
+
+    private void logUserIn(User returnedUser) {
+        userLocalStore.storeUserData(returnedUser);
+        userLocalStore.setUserLoggedIn(true);
+        startActivity(new Intent(this, MainActivity.class));
     }
 }
