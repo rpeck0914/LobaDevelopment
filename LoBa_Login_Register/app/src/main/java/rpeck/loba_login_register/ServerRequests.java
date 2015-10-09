@@ -47,7 +47,7 @@ public class ServerRequests {
     }
 
 
-    public class StoreUserDataAsyncTask extends AsyncTask<Void,Void, Void> {
+    public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void> {
 
         User user;
         GetUserCallback userCallback;
@@ -116,7 +116,7 @@ public class ServerRequests {
             User returnedUser = null;
             try {
                 post.setEntity(new UrlEncodedFormEntity(dataToSend));
-                HttpResponse httpResponse =  client.execute(post);
+                HttpResponse httpResponse = client.execute(post);
 
                 HttpEntity entity = httpResponse.getEntity();
                 String result = EntityUtils.toString(entity);
