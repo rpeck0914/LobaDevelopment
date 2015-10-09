@@ -62,15 +62,14 @@ public class ServerRequests {
         @Override
         protected Void doInBackground(Void... params) {
             ArrayList<NameValuePair> dataToSend = new ArrayList<>();
-            dataToSend.add(new BasicNameValuePair("name", user.getmName()));
-            dataToSend.add(new BasicNameValuePair("username", user.getmUserName()));
-            dataToSend.add(new BasicNameValuePair("password", user.getmPassword()));
+            dataToSend.add(new BasicNameValuePair("name", user.mName));
+            dataToSend.add(new BasicNameValuePair("username", user.mUserName));
+            dataToSend.add(new BasicNameValuePair("password", user.mPassword));
 
             HttpParams httpRequestParams = getHttpRequestParams();
 
             HttpClient client = new DefaultHttpClient(httpRequestParams);
-            HttpPost post = new HttpPost(SERVER_ADDRESS
-                    + "Register.php");
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "Register.php");
 
             try {
                 post.setEntity(new UrlEncodedFormEntity(dataToSend));
@@ -112,18 +111,15 @@ public class ServerRequests {
         @Override
         protected User doInBackground(Void... params) {
             ArrayList<NameValuePair> dataToSend = new ArrayList<>();
-            dataToSend.add(new BasicNameValuePair("username", user.getmUserName()));
-            dataToSend.add(new BasicNameValuePair("password", user.getmPassword()));
+            dataToSend.add(new BasicNameValuePair("username", user.mUserName));
+            dataToSend.add(new BasicNameValuePair("password", user.mPassword));
 
             HttpParams httpRequestParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpRequestParams,
-                    CONNECTION_TIMEOUT);
-            HttpConnectionParams.setSoTimeout(httpRequestParams,
-                    CONNECTION_TIMEOUT);
+            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
 
             HttpClient client = new DefaultHttpClient(httpRequestParams);
-            HttpPost post = new HttpPost(SERVER_ADDRESS
-                    + "FetchUserData.php");
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "FetchUserData.php");
 
             User returnedUser = null;
 
@@ -138,10 +134,8 @@ public class ServerRequests {
                 if (jObject.length() != 0){
                     Log.v("happened", "2");
                     String name = jObject.getString("name");
-                    int age = jObject.getInt("age");
 
-                    returnedUser = new User(name, user.getmUserName(),
-                            user.getmPassword());
+                    returnedUser = new User(name, user.mUserName, user.mPassword);
                 }
 
             } catch (Exception e) {

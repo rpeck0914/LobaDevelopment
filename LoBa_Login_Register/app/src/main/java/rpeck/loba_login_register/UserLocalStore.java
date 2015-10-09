@@ -16,40 +16,36 @@ public class UserLocalStore {
     }
 
     public void storeUserData(User user) {
-        SharedPreferences.Editor spEditor = userLocalDatabase.edit();
-        spEditor.putString("name",user.getmName());
-        spEditor.putString("username", user.getmUserName());
-        spEditor.putString("password", user.getmPassword());
-        spEditor.commit();
-    }
-
-    public User getLoggedInUser() {
-        String name = userLocalDatabase.getString("name", "");
-        String username = userLocalDatabase.getString("username", "");
-        String password = userLocalDatabase.getString("password", "");
-
-        User storedUser = new User(name, username, password);
-        return storedUser;
+        SharedPreferences.Editor userLocalDatabaseEditor  = userLocalDatabase.edit();
+        userLocalDatabaseEditor.putString("name", user.mName);
+        userLocalDatabaseEditor.putString("username", user.mUserName);
+        userLocalDatabaseEditor.putString("password", user.mPassword);
+        userLocalDatabaseEditor.commit();
     }
 
     public void setUserLoggedIn(boolean loggedIn) {
-        SharedPreferences.Editor spEditor = userLocalDatabase.edit();
-        spEditor.putBoolean("loggedIn", loggedIn);
-        spEditor.commit();
-    }
-
-    public boolean getUserLoggedIn() {
-        if(userLocalDatabase.getBoolean("loggedIn", false) == true){
-            return true;
-        } else {
-         return false;
-        }
-
+        SharedPreferences.Editor userLocalDatabaseEditor = userLocalDatabase.edit();
+        userLocalDatabaseEditor.putBoolean("loggedIn", loggedIn);
+        userLocalDatabaseEditor.commit();
     }
 
     public void clearUserData() {
-        SharedPreferences.Editor spEditor = userLocalDatabase.edit();
-        spEditor.clear();
-        spEditor.commit();
+        SharedPreferences.Editor userLocalDatabaseEditor = userLocalDatabase.edit();
+        userLocalDatabaseEditor.clear();
+        userLocalDatabaseEditor.commit();
+    }
+
+    public User getLoggedInUser() {
+        if (userLocalDatabase.getBoolean("loggedIn", false) == false) {
+            return null;
+        }
+
+        String name = userLocalDatabase.getString("name", "");
+        String username = userLocalDatabase.getString("username", "");
+        String password = userLocalDatabase.getString("password", "");
+        int age = userLocalDatabase.getInt("age", -1);
+
+        User user = new User(name, username, password);
+        return user;
     }
 }

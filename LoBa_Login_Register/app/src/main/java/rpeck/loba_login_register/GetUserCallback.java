@@ -5,6 +5,5 @@ package rpeck.loba_login_register;
  */
 interface GetUserCallback {
 
-    public abstract void done(User returnedUser);
-
+    void done(User returnedUser);
 }

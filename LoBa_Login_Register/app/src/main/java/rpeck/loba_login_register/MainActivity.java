@@ -41,13 +41,18 @@ public class MainActivity extends Activity implements View.OnClickListener{
     }
 
     private boolean authenticate() {
-        return userLocalStore.getUserLoggedIn();
+        if (userLocalStore.getLoggedInUser() == null) {
+            Intent intent = new Intent(this, Login.class);
+            startActivity(intent);
+            return false;
+        }
+        return true;
     }
 
     private void displayUserDetails() {
         User user = userLocalStore.getLoggedInUser();
 
-        mEnterUserName.setText(user.getmUserName());
+        mEnterUserName.setText(user.mName);
     }
 
     @Override

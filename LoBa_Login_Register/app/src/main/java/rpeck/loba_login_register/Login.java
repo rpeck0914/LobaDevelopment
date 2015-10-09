@@ -16,7 +16,7 @@ public class Login extends Activity implements View.OnClickListener {
     private Button mButtonLogin;
     private EditText mEnterUserName, mEnterPassword;
     private TextView mRegisterLink;
-    private UserLocalStore userLocalStore;
+    UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
