@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 public class UserLocalStore {
 
     public static final String SP_NAME = "userDetails";
+
     SharedPreferences userLocalDatabase;
 
     public UserLocalStore(Context context) {
@@ -43,7 +44,6 @@ public class UserLocalStore {
         String name = userLocalDatabase.getString("name", "");
         String username = userLocalDatabase.getString("username", "");
         String password = userLocalDatabase.getString("password", "");
-        int age = userLocalDatabase.getInt("age", -1);
 
         User user = new User(name, username, password);
         return user;
