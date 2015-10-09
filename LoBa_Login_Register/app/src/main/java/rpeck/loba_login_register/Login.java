@@ -56,7 +56,7 @@ public class Login extends Activity implements View.OnClickListener {
 
     private void authenticate(User user) {
         ServerRequests serverRequests = new ServerRequests(this);
-        serverRequests.fetchUserDataInBackground(user, new GetUserCallback() {
+        serverRequests.fetchUserDataAsyncTask(user, new GetUserCallback() {
             @Override
             public void done(User returnedUser) {
                 if(returnedUser == null) {
