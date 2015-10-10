@@ -21,3 +21,8 @@ http://000webhost.com
 	*** MySQL Details ***
 		Use mysql host 'mysql10.000webhost.com' for your PHP scripts.
 		MySQL databases and users can be setup from control panel.
+
+		
+Outside Resources:
+	https://www.youtube.com/watch?v=XT73k0ox7zc
+	http://www.learn2crack.com/2013/12/android-spinner-dropdown-example.html
