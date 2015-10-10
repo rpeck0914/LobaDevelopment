@@ -65,6 +65,8 @@ public class ServerRequests {
             dataToSend.add(new BasicNameValuePair("name", user.mName));
             dataToSend.add(new BasicNameValuePair("username", user.mUserName));
             dataToSend.add(new BasicNameValuePair("password", user.mPassword));
+            dataToSend.add(new BasicNameValuePair("city", user.mCity));
+            dataToSend.add(new BasicNameValuePair("state", user.mState));
 
             HttpParams httpRequestParams = getHttpRequestParams();
 
@@ -134,8 +136,10 @@ public class ServerRequests {
                 if (jObject.length() != 0){
                     Log.v("happened", "2");
                     String name = jObject.getString("name");
+                    String city = jObject.getString("city");
+                    String state = jObject.getString("state");
 
-                    returnedUser = new User(name, user.mUserName, user.mPassword);
+                    returnedUser = new User(name, user.mUserName, user.mPassword, city, state);
                 }
 
             } catch (Exception e) {
