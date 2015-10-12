@@ -60,6 +60,9 @@ public class Register extends Activity implements View.OnClickListener{
         mStates[2] = "Indiana";
         mStates[3] = "Ohio";
 
+        pullStates();
+
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mStates);
         mSelectState.setAdapter(adapter);
         mSelectState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -103,6 +106,11 @@ public class Register extends Activity implements View.OnClickListener{
             }
         });
 
+    }
+
+    private void pullStates(){
+        ServerRequests serverRequests = new ServerRequests(this);
+        serverRequests.fetchStateDataAsyncTask();
     }
 
     private void pullCities(Cities cities) {

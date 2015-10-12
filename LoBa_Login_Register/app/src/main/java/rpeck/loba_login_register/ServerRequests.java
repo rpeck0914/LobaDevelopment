@@ -51,6 +51,11 @@ public class ServerRequests {
         new fetchUserDataAsyncTask(user, userCallBack).execute();
     }
 
+    public void fetchStateDataAsyncTask(){
+        progressDialog.show();
+        new fetchStateDataAsyncTask().execute();
+    }
+
     public void fetchCityDataAsyncTask(Cities cities, GetCitiesCallback getCitiesCallback) {
         progressDialog.show();
         new fetchCityDataAsyncTask(cities, getCitiesCallback);
@@ -165,9 +170,11 @@ public class ServerRequests {
         }
     }
 
-    public class fetchStateData extends AsyncTask<Void, Void, Void>{
+    public class fetchStateDataAsyncTask extends AsyncTask<Void, Void, Void>{
 
-        public fetchStateData() {
+        private String[] stateArray;
+
+        public fetchStateDataAsyncTask() {
 
         }
 
@@ -180,7 +187,7 @@ public class ServerRequests {
             HttpClient client = new DefaultHttpClient(httpRequestParams);
             HttpGet get = new HttpGet(SERVER_ADDRESS + "FetchStateData.php");
 
-            String[] stateArray;
+
             
             try {
                 HttpResponse httpResponse = client.execute(get);
@@ -196,13 +203,21 @@ public class ServerRequests {
                     stateArray[i] = jArray.getString(i);
                 }
 
-             
             } catch (Exception e) {
                 
             }
-            
-
             return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+        }
+
+        public String[] getStateArray() {
+            return stateArray;
         }
     }
 
