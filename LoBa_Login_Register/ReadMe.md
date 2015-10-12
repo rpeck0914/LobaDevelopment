@@ -27,3 +27,4 @@ Outside Resources:
 	https://www.youtube.com/watch?v=XT73k0ox7zc
 	http://www.learn2crack.com/2013/12/android-spinner-dropdown-example.html
 	https://fahmirahman.wordpress.com/2011/04/21/connection-between-php-server-and-android-client-using-http-and-json/
+	barnesbrothers.homesever.com/ppwdapi/item

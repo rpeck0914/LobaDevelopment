@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -164,6 +165,47 @@ public class ServerRequests {
         }
     }
 
+    public class fetchStateData extends AsyncTask<Void, Void, Void>{
+
+        public fetchStateData() {
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            HttpParams httpRequestParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+
+            HttpClient client = new DefaultHttpClient(httpRequestParams);
+            HttpGet get = new HttpGet(SERVER_ADDRESS + "FetchStateData.php");
+
+            String[] stateArray;
+            
+            try {
+                HttpResponse httpResponse = client.execute(get);
+
+                HttpEntity entity = httpResponse.getEntity();
+                String result = EntityUtils.toString(entity);
+                //JSONObject jObject = new JSONObject(result);
+                JSONArray jArray = new JSONArray(result);
+
+                stateArray = new String[jArray.length()];
+
+                for(int i = 1; i < jArray.length(); i++) {
+                    stateArray[i] = jArray.getString(i);
+                }
+
+             
+            } catch (Exception e) {
+                
+            }
+            
+
+            return null;
+        }
+    }
+
     public class fetchCityDataAsyncTask extends AsyncTask<Void, Void, Cities> {
         Cities cities;
         GetCitiesCallback citiesCallback;
@@ -198,7 +240,7 @@ public class ServerRequests {
 
                 citiesArray = new String[jObject.length()];
 
-                citiesArray = jObject.getString("cityname");
+                //citiesArray = jObject.getString("counter");
 
 //                for(int i = 0; i < jObject.length(); i++) {
 //                    citiesArray[i] = jObject.getString("cityname");
