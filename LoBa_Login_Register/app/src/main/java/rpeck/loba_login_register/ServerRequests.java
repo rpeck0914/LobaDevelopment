@@ -1,5 +1,6 @@
 package rpeck.loba_login_register;
 
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -17,9 +18,14 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ServerRequests {
@@ -34,8 +40,7 @@ public class ServerRequests {
         progressDialog.setMessage("Please wait...");
     }
 
-    public void storeUserDataInBackground(User user,
-                                          GetUserCallback userCallBack) {
+    public void storeUserDataInBackground(User user, GetUserCallback userCallBack) {
         progressDialog.show();
         new StoreUserDataAsyncTask(user, userCallBack).execute();
     }
@@ -43,6 +48,11 @@ public class ServerRequests {
     public void fetchUserDataAsyncTask(User user, GetUserCallback userCallBack) {
         progressDialog.show();
         new fetchUserDataAsyncTask(user, userCallBack).execute();
+    }
+
+    public void fetchCityDataAsyncTask(Cities cities, GetCitiesCallback getCitiesCallback) {
+        progressDialog.show();
+        new fetchCityDataAsyncTask(cities, getCitiesCallback);
     }
 
     /**
@@ -85,10 +95,8 @@ public class ServerRequests {
 
         private HttpParams getHttpRequestParams() {
             HttpParams httpRequestParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpRequestParams,
-                    CONNECTION_TIMEOUT);
-            HttpConnectionParams.setSoTimeout(httpRequestParams,
-                    CONNECTION_TIMEOUT);
+            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
             return httpRequestParams;
         }
 
@@ -134,7 +142,6 @@ public class ServerRequests {
                 JSONObject jObject = new JSONObject(result);
 
                 if (jObject.length() != 0){
-                    Log.v("happened", "2");
                     String name = jObject.getString("name");
                     String city = jObject.getString("city");
                     String state = jObject.getString("state");
@@ -154,6 +161,62 @@ public class ServerRequests {
             super.onPostExecute(returnedUser);
             progressDialog.dismiss();
             userCallBack.done(returnedUser);
+        }
+    }
+
+    public class fetchCityDataAsyncTask extends AsyncTask<Void, Void, Cities> {
+        Cities cities;
+        GetCitiesCallback citiesCallback;
+
+        public fetchCityDataAsyncTask(Cities cities, GetCitiesCallback citiesCallback) {
+            this.cities = cities;
+            this.citiesCallback = citiesCallback;
+        }
+
+        @Override
+        protected Cities doInBackground(Void... params) {
+            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
+            dataToSend.add(new BasicNameValuePair("stateID", cities.state_id + ""));
+
+            HttpParams httpRequestParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+
+            HttpClient client = new DefaultHttpClient(httpRequestParams);
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "FetchCitiesFromState.php");
+
+            String[] citiesArray;
+            Cities returnedCities = null;
+
+            try {
+                post.setEntity(new UrlEncodedFormEntity(dataToSend));
+                HttpResponse httpResponse = client.execute(post);
+
+                HttpEntity entity = httpResponse.getEntity();
+                String result = EntityUtils.toString(entity);
+                JSONObject jObject = new JSONObject(result);
+
+                citiesArray = new String[jObject.length()];
+
+                citiesArray = jObject.getString("cityname");
+
+//                for(int i = 0; i < jObject.length(); i++) {
+//                    citiesArray[i] = jObject.getString("cityname");
+//                }
+                returnedCities = new Cities(jObject.length(), cities.state_id, citiesArray);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return returnedCities;
+        }
+
+        @Override
+        protected void onPostExecute(Cities returnedCities) {
+            super.onPostExecute(returnedCities);
+            progressDialog.dismiss();
+            citiesCallback.done(returnedCities);
         }
     }
 }
