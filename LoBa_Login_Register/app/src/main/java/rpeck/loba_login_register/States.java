@@ -6,17 +6,20 @@ package rpeck.loba_login_register;
 public class States {
 
     //private int arraysize;
-    private String[] states;
+    public String[] states;
+    public int[] stateID;
 
     public States(){}
 
-    public States(int arraysize, String[] statenames) {
+    public States(int arraysize, String[] statenames, int[] stateID) {
         //this.arraysize = arraysize;
         this.states = new String[arraysize];
+        this.stateID = new int[arraysize];
         this.states = statenames;
+        this.stateID = stateID;
     }
 
-    public String[] getStates() {
-        return states;
-    }
+    //public String[] getStates() {
+        //return states;
+    //}
 }

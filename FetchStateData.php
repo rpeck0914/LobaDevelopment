@@ -7,7 +7,7 @@
 	mysqli_stmt_store_result($statement);
 	mysqli_stmt_bind_result($statement, $stateID, $statename);
 	
-	$state = array();
+	$states = array();
 	//$stateid = array();
 	//$counter = 0;
 	

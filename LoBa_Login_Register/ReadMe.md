@@ -30,3 +30,8 @@ http://000webhost.com
 		barnesbrothers.homeserver.com/ppwdapi/item
 		http://stackoverflow.com/questions/18174064/value-of-type-java-lang-string-cannot-be-converted-to-jsonarray
 		https://processing.org/reference/JSONObject_getJSONArray_.html
+		http://stackoverflow.com/questions/4778754/kill-activity-on-back-button
+		http://stackoverflow.com/questions/5486789/how-do-i-make-a-splash-screen
+		https://www.youtube.com/watch?v=gARkm1GYtko
+		https://developer.android.com/training/basics/actionbar/styling.html
+		http://stackoverflow.com/questions/5958169/how-to-merge-two-sorted-arrays-into-a-sorted-array

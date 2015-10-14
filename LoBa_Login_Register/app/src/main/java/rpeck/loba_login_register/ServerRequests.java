@@ -175,6 +175,7 @@ public class ServerRequests {
         States states;
         GetStatesCallback statesCallback;
         private String[] stateArray;
+        private int[] stateIDArray;
 
         public fetchStateDataAsyncTask(States states, GetStatesCallback statesCallback) {
             this.states = states;
@@ -199,24 +200,21 @@ public class ServerRequests {
 
                 HttpEntity entity = httpResponse.getEntity();
                 String result = EntityUtils.toString(entity);
-                JSONObject jObject = new JSONObject( URLDecoder.decode(result, "UTF-8") );
-                //JSONObject jObject = new JSONObject(result);
-                JSONArray jArray = jObject.getJSONArray("");
+                JSONObject jObject = new JSONObject(URLDecoder.decode(result, "UTF-8"));
 
-                stateArray = new String[jArray.length()];
+                stateArray = new String[jObject.length()];
+                stateIDArray = new int[jObject.length()];
 
-                for(int i = 1; i < jArray.length(); i++) {
-                    JSONObject state = jArray.getJSONObject(i);
-
-                    stateArray[i] = state.getString(i+"");
+                for(int i = 0; i < jObject.length(); i++) {
+                    stateArray[i] = jObject.getString((i + 1)+"");
+                    stateIDArray[i] = (i + 1);
                 }
 
-                returnedStates = new States(jArray.length(), stateArray);
+                returnedStates = new States(jObject.length(), stateArray, stateIDArray);
 
             } catch (Exception e) {
                 Log.d("ERROR", e.toString());
             }
-            //Log.d("States", stateArray.toString());
             return returnedStates;
 
         }

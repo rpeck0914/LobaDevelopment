@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -55,40 +56,23 @@ public class Register extends Activity implements View.OnClickListener{
         }
     }
 
-    private void loadStateSpinner(States statesToLoad) {
-
-
-
-
-//        mStates[0] = "Please Select A State";
-//        mStates[1] = "Michigan";
-//        mStates[2] = "Indiana";
-//        mStates[3] = "Ohio";
-
-        //
+    private void loadStateSpinner(final States statesToLoad) {
 
         if (statesToLoad != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statesToLoad.getStates());
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statesToLoad.states);
             mSelectState.setAdapter(adapter);
             mSelectState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                 @Override
                 public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
-//                if(mStates[1] == mSelectState.getSelectedItem().toString()){
-//                    stateID = 1;
-//                }
-//                if(mStates[2] == mSelectState.getSelectedItem().toString()){
-//                    stateID = 2;
-//                }
-//                if(mStates[3] == mSelectState.getSelectedItem().toString()){
-//                    stateID = 3;
-//                }
-//
-//                if(stateID != 0) {
-//                    Cities cities = new Cities(stateID);
-//
-//                    pullCities(cities);
-//                }
+                    int selectedIndex = 0;
+                    String selectedState = mSelectState.getSelectedItem().toString();
+                    for(int i = 0; i < statesToLoad.states.length; i++){
+                        if(statesToLoad.states[i] == selectedState){
+                            selectedIndex = (i + 1);
+                        }
+                    }
+                    Log.d("ERROR", selectedIndex + "");
                 }
 
                 @Override
