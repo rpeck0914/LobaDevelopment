@@ -51,9 +51,9 @@ public class ServerRequests {
         new fetchUserDataAsyncTask(user, userCallBack).execute();
     }
 
-    public void fetchStateDataAsyncTask(){
+    public void fetchStateDataAsyncTask(States states, GetStatesCallback statesCallback){
         progressDialog.show();
-        new fetchStateDataAsyncTask().execute();
+        new fetchStateDataAsyncTask(states, statesCallback).execute();
     }
 
     public void fetchCityDataAsyncTask(Cities cities, GetCitiesCallback getCitiesCallback) {
@@ -170,16 +170,20 @@ public class ServerRequests {
         }
     }
 
-    public class fetchStateDataAsyncTask extends AsyncTask<Void, Void, Void>{
-
+    public class fetchStateDataAsyncTask extends AsyncTask<Void, Void, States>{
+        States states;
+        GetStatesCallback statesCallback;
         private String[] stateArray;
 
-        public fetchStateDataAsyncTask() {
-
+        public fetchStateDataAsyncTask(States states, GetStatesCallback statesCallback) {
+            this.states = states;
+            this.statesCallback = statesCallback;
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected States doInBackground(Void... voids) {
+
+
             HttpParams httpRequestParams = new BasicHttpParams();
             HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
             HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
@@ -187,37 +191,39 @@ public class ServerRequests {
             HttpClient client = new DefaultHttpClient(httpRequestParams);
             HttpGet get = new HttpGet(SERVER_ADDRESS + "FetchStateData.php");
 
+            States returnedStates = null;
 
-            
             try {
                 HttpResponse httpResponse = client.execute(get);
 
                 HttpEntity entity = httpResponse.getEntity();
                 String result = EntityUtils.toString(entity);
-                //JSONObject jObject = new JSONObject(result);
-                JSONArray jArray = new JSONArray(result);
+                JSONObject jObject = new JSONObject(result);
+                JSONArray jArray = jObject.getJSONArray("state");
 
                 stateArray = new String[jArray.length()];
 
                 for(int i = 1; i < jArray.length(); i++) {
-                    stateArray[i] = jArray.getString(i);
+                    JSONObject state = jArray.getJSONObject(i);
+
+                    stateArray[i] = state.getString(i+"");
                 }
 
+                returnedStates = new States(jArray.length(), stateArray);
+
             } catch (Exception e) {
-                
+                Log.d("ERROR", e.toString());
             }
+            //Log.d("States", stateArray.toString());
             return null;
 
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(States returnedStates) {
+            super.onPostExecute(returnedStates);
             progressDialog.dismiss();
-        }
-
-        public String[] getStateArray() {
-            return stateArray;
+            statesCallback.done(returnedStates);
         }
     }
 

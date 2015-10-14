@@ -2,6 +2,7 @@ package rpeck.loba_login_register;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,8 +30,8 @@ public class Register extends Activity implements View.OnClickListener{
         mEnterPassword = (EditText) findViewById(R.id.enter_Password);
         mSelectState = (Spinner) findViewById(R.id.enter_state);
         mSelectCity = (Spinner) findViewById(R.id.enter_city);
-
-        loadStateSpinner();
+        States states = new States();
+        pullStates(states);
 
         mButtonRegister = (Button) findViewById(R.id.button_register);
         mButtonRegister.setOnClickListener(this);
@@ -54,42 +55,50 @@ public class Register extends Activity implements View.OnClickListener{
         }
     }
 
-    private void loadStateSpinner() {
-        mStates[0] = "Please Select A State";
-        mStates[1] = "Michigan";
-        mStates[2] = "Indiana";
-        mStates[3] = "Ohio";
-
-        pullStates();
+    private void loadStateSpinner(States statesToLoad) {
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mStates);
-        mSelectState.setAdapter(adapter);
-        mSelectState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
-                if(mStates[1] == mSelectState.getSelectedItem().toString()){
-                    stateID = 1;
+
+//        mStates[0] = "Please Select A State";
+//        mStates[1] = "Michigan";
+//        mStates[2] = "Indiana";
+//        mStates[3] = "Ohio";
+
+        //
+
+        if (statesToLoad != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statesToLoad.getStates());
+            mSelectState.setAdapter(adapter);
+            mSelectState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                @Override
+                public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
+//                if(mStates[1] == mSelectState.getSelectedItem().toString()){
+//                    stateID = 1;
+//                }
+//                if(mStates[2] == mSelectState.getSelectedItem().toString()){
+//                    stateID = 2;
+//                }
+//                if(mStates[3] == mSelectState.getSelectedItem().toString()){
+//                    stateID = 3;
+//                }
+//
+//                if(stateID != 0) {
+//                    Cities cities = new Cities(stateID);
+//
+//                    pullCities(cities);
+//                }
                 }
-                if(mStates[2] == mSelectState.getSelectedItem().toString()){
-                    stateID = 2;
-                }
-                if(mStates[3] == mSelectState.getSelectedItem().toString()){
-                    stateID = 3;
-                }
 
-                if(stateID != 0) {
-                    Cities cities = new Cities(stateID);
+                @Override
+                public void onNothingSelected(AdapterView<?> arg0) {
 
-                    pullCities(cities);
                 }
-            }
-            @Override
-            public  void onNothingSelected(AdapterView<?> arg0) {
-
-            }
-        });
+            });
+        } else {
+            showErrorMessage();
+        }
     }
 
     private void loadCitySpinner(Cities cities) {
@@ -108,9 +117,15 @@ public class Register extends Activity implements View.OnClickListener{
 
     }
 
-    private void pullStates(){
+    private void pullStates(States states){
         ServerRequests serverRequests = new ServerRequests(this);
-        serverRequests.fetchStateDataAsyncTask();
+        serverRequests.fetchStateDataAsyncTask(states, new GetStatesCallback() {
+            @Override
+            public void done(States returnedStates) {
+                //Log.d("States", returnedStates.toString());
+                loadStateSpinner(returnedStates);
+            }
+        });
     }
 
     private void pullCities(Cities cities) {
@@ -129,7 +144,7 @@ public class Register extends Activity implements View.OnClickListener{
 
     private void showErrorMessage() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Register.this);
-        dialogBuilder.setMessage("Error Loading Cities");
+        dialogBuilder.setMessage("Error Loading States");
         dialogBuilder.setPositiveButton("OK", null);
         dialogBuilder.show();
     }

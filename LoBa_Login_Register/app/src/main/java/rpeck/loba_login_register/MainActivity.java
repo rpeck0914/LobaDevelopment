@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends Activity implements View.OnClickListener{
 
     private Button mButtonLogout;
-    private EditText mEnterUserName;
+    private TextView mLoggedInName;
+    //private EditText mEnterUserName;
     private UserLocalStore userLocalStore;
 
     @Override
@@ -18,7 +20,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mEnterUserName = (EditText) findViewById(R.id.enter_username);
+        mLoggedInName = (TextView) findViewById(R.id.logged_in_name);
+        //mEnterUserName = (EditText) findViewById(R.id.enter_username);
 
         mButtonLogout = (Button) findViewById(R.id.button_logout);
         mButtonLogout.setOnClickListener(this);
@@ -50,7 +53,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private void displayUserDetails() {
         User user = userLocalStore.getLoggedInUser();
 
-        mEnterUserName.setText(user.mName);
+        mLoggedInName.setText(user.mName);
     }
 
     @Override
