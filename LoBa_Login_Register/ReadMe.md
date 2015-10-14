@@ -23,8 +23,10 @@ http://000webhost.com
 		MySQL databases and users can be setup from control panel.
 
 		
-Outside Resources:
-	https://www.youtube.com/watch?v=XT73k0ox7zc
-	http://www.learn2crack.com/2013/12/android-spinner-dropdown-example.html
-	https://fahmirahman.wordpress.com/2011/04/21/connection-between-php-server-and-android-client-using-http-and-json/
-	barnesbrothers.homesever.com/ppwdapi/item
+	*** Outside Resources: ***
+		https://www.youtube.com/watch?v=XT73k0ox7zc
+		http://www.learn2crack.com/2013/12/android-spinner-dropdown-example.html
+		https://fahmirahman.wordpress.com/2011/04/21/connection-between-php-server-and-android-client-using-http-and-json/
+		barnesbrothers.homeserver.com/ppwdapi/item
+		http://stackoverflow.com/questions/18174064/value-of-type-java-lang-string-cannot-be-converted-to-jsonarray
+		https://processing.org/reference/JSONObject_getJSONArray_.html

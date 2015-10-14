@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -198,8 +199,9 @@ public class ServerRequests {
 
                 HttpEntity entity = httpResponse.getEntity();
                 String result = EntityUtils.toString(entity);
-                JSONObject jObject = new JSONObject(result);
-                JSONArray jArray = jObject.getJSONArray("state");
+                JSONObject jObject = new JSONObject( URLDecoder.decode(result, "UTF-8") );
+                //JSONObject jObject = new JSONObject(result);
+                JSONArray jArray = jObject.getJSONArray("");
 
                 stateArray = new String[jArray.length()];
 
@@ -215,7 +217,7 @@ public class ServerRequests {
                 Log.d("ERROR", e.toString());
             }
             //Log.d("States", stateArray.toString());
-            return null;
+            return returnedStates;
 
         }
 
