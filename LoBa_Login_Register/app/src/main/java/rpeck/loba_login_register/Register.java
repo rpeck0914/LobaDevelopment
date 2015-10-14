@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import java.util.Arrays;
+import java.lang.reflect.Array;
 
 public class Register extends Activity implements View.OnClickListener{
 
@@ -57,6 +59,8 @@ public class Register extends Activity implements View.OnClickListener{
     }
 
     private void loadStateSpinner(final States statesToLoad) {
+
+        Arrays.sort(statesToLoad.states);
 
         if (statesToLoad != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statesToLoad.states);
