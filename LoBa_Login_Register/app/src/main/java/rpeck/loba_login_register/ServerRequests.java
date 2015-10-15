@@ -1,6 +1,5 @@
 package rpeck.loba_login_register;
 
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -27,7 +26,10 @@ import java.io.InputStream;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public class ServerRequests {
@@ -59,7 +61,7 @@ public class ServerRequests {
 
     public void fetchCityDataAsyncTask(Cities cities, GetCitiesCallback getCitiesCallback) {
         progressDialog.show();
-        new fetchCityDataAsyncTask(cities, getCitiesCallback);
+        new fetchCityDataAsyncTask(cities, getCitiesCallback).execute();
     }
 
     /**
@@ -230,6 +232,8 @@ public class ServerRequests {
     public class fetchCityDataAsyncTask extends AsyncTask<Void, Void, Cities> {
         Cities cities;
         GetCitiesCallback citiesCallback;
+        private String[] citiesArray;
+        private int[] citiesIDArray;
 
         public fetchCityDataAsyncTask(Cities cities, GetCitiesCallback citiesCallback) {
             this.cities = cities;
@@ -239,7 +243,7 @@ public class ServerRequests {
         @Override
         protected Cities doInBackground(Void... params) {
             ArrayList<NameValuePair> dataToSend = new ArrayList<>();
-            dataToSend.add(new BasicNameValuePair("stateID", cities.state_id + ""));
+            dataToSend.add(new BasicNameValuePair("stateid", cities.state_id + ""));
 
             HttpParams httpRequestParams = new BasicHttpParams();
             HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
@@ -248,7 +252,6 @@ public class ServerRequests {
             HttpClient client = new DefaultHttpClient(httpRequestParams);
             HttpPost post = new HttpPost(SERVER_ADDRESS + "FetchCitiesFromState.php");
 
-            String[] citiesArray;
             Cities returnedCities = null;
 
             try {
@@ -257,16 +260,26 @@ public class ServerRequests {
 
                 HttpEntity entity = httpResponse.getEntity();
                 String result = EntityUtils.toString(entity);
-                JSONObject jObject = new JSONObject(result);
+                JSONObject jObject = new JSONObject(URLDecoder.decode(result, "UTF-8"));
 
                 citiesArray = new String[jObject.length()];
+                citiesIDArray = new int[jObject.length()];
+                Iterator<String> keys = jObject.keys();
 
-                //citiesArray = jObject.getString("counter");
+                for (int i = 0; i <jObject.length(); i++){
+                    String key = keys.next();
+
+                    citiesIDArray[i] = Integer.parseInt(key);
+                    citiesArray[i] = jObject.getString(key);
+
+                }
 
 //                for(int i = 0; i < jObject.length(); i++) {
-//                    citiesArray[i] = jObject.getString("cityname");
+//                    stateArray[i] = jObject.getString((i + 1)+"");
+//                    stateIDArray[i] = (i + 1);
 //                }
-                returnedCities = new Cities(jObject.length(), cities.state_id, citiesArray);
+
+                returnedCities = new Cities(jObject.length(),cities.state_id, citiesArray, citiesIDArray);
 
             } catch (Exception e) {
                 e.printStackTrace();

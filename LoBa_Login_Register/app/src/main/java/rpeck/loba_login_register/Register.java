@@ -20,8 +20,9 @@ public class Register extends Activity implements View.OnClickListener{
     private Button mButtonRegister;
     private EditText mEnterName, mEnterUserName, mEnterPassword;
     private Spinner mSelectState, mSelectCity;
-    private String[] mStates = new String[4];
-    private int stateID = 0;
+
+    private String[] mSortedStates;
+    private int[] mSortedStateID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,23 +61,25 @@ public class Register extends Activity implements View.OnClickListener{
 
     private void loadStateSpinner(final States statesToLoad) {
 
-        Arrays.sort(statesToLoad.states);
+        sort(statesToLoad.states, statesToLoad.stateID);
 
-        if (statesToLoad != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statesToLoad.states);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mSortedStates);
             mSelectState.setAdapter(adapter);
             mSelectState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                 @Override
                 public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
-                    int selectedIndex = 0;
+                    int selectedIndex;
                     String selectedState = mSelectState.getSelectedItem().toString();
-                    for(int i = 0; i < statesToLoad.states.length; i++){
-                        if(statesToLoad.states[i] == selectedState){
-                            selectedIndex = (i + 1);
+                    for(int i = 0; i < mSortedStates.length; i++){
+                        if(mSortedStates[i] == selectedState){
+                            selectedIndex = (i);
+                            Log.d("ERROR", mSortedStateID[selectedIndex]+"");
+
+                            Cities cities = new Cities(mSortedStateID[selectedIndex]);
+                            pullCities(cities);
                         }
                     }
-                    Log.d("ERROR", selectedIndex + "");
                 }
 
                 @Override
@@ -84,9 +87,6 @@ public class Register extends Activity implements View.OnClickListener{
 
                 }
             });
-        } else {
-            showErrorMessage();
-        }
     }
 
     private void loadCitySpinner(Cities cities) {
@@ -110,8 +110,12 @@ public class Register extends Activity implements View.OnClickListener{
         serverRequests.fetchStateDataAsyncTask(states, new GetStatesCallback() {
             @Override
             public void done(States returnedStates) {
-                //Log.d("States", returnedStates.toString());
-                loadStateSpinner(returnedStates);
+                if(returnedStates == null){
+                    String errorMessage = "Error Loading States";
+                    showErrorMessage(errorMessage);
+                }else {
+                    loadStateSpinner(returnedStates);
+                }
             }
         });
     }
@@ -122,7 +126,8 @@ public class Register extends Activity implements View.OnClickListener{
             @Override
             public void done(Cities returnedCities) {
                 if (returnedCities == null) {
-                    showErrorMessage();
+                    String errorMessage = "Error Loading Cities";
+                    showErrorMessage(errorMessage);
                 } else {
                     loadCitySpinner(returnedCities);
                 }
@@ -130,10 +135,34 @@ public class Register extends Activity implements View.OnClickListener{
         });
     }
 
-    private void showErrorMessage() {
+    private void showErrorMessage(String errormessage) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Register.this);
-        dialogBuilder.setMessage("Error Loading States");
+        dialogBuilder.setMessage(errormessage);
         dialogBuilder.setPositiveButton("OK", null);
         dialogBuilder.show();
+    }
+
+    private void sort(String[] name, int[] id) {
+        mSortedStates = name;
+        mSortedStateID = id;
+        boolean flag = true;
+        String tempState;
+        int tempID;
+
+        while(flag) {
+            flag = false;
+            for (int i = 0; i < mSortedStates.length - 1; i++) {
+                if(mSortedStates[i].compareToIgnoreCase(mSortedStates[i + 1]) > 0) {
+                    tempState = mSortedStates[i];
+                    tempID = mSortedStateID[i];
+                    mSortedStates[i] = mSortedStates[i + 1];
+                    mSortedStateID[i] = mSortedStateID[i + 1];
+                    mSortedStates[i + 1] = tempState;
+                    mSortedStateID[i + 1] = tempID;
+
+                    flag = true;
+                }
+            }
+        }
     }
 }
