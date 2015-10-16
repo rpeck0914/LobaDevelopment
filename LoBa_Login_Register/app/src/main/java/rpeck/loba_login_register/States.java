@@ -4,6 +4,7 @@ package rpeck.loba_login_register;
  * Created by Robert Peck on 10/12/2015.
  */
 public class States {
+    //States Class Creates A Class That Stores The Array Of States
     
     public String[] states;
     public int[] stateID;

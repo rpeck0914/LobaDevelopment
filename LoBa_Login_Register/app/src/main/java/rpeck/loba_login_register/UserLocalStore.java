@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
  * Created by Robert Peck on 10/7/2015.
  */
 public class UserLocalStore {
+    //UserLocalStore Class Stores The User's Details Locally On The Device
 
     public static final String SP_NAME = "userDetails";
 
@@ -17,6 +18,7 @@ public class UserLocalStore {
     }
 
     public void storeUserData(User user) {
+        //Stores The User's Information In A Local Database
         SharedPreferences.Editor userLocalDatabaseEditor  = userLocalDatabase.edit();
         userLocalDatabaseEditor.putString("name", user.mName);
         userLocalDatabaseEditor.putString("username", user.mUserName);
@@ -27,18 +29,21 @@ public class UserLocalStore {
     }
 
     public void setUserLoggedIn(boolean loggedIn) {
+        //Sets The User's Log In Status To True
         SharedPreferences.Editor userLocalDatabaseEditor = userLocalDatabase.edit();
         userLocalDatabaseEditor.putBoolean("loggedIn", loggedIn);
         userLocalDatabaseEditor.commit();
     }
 
     public void clearUserData() {
+        //Clears The User's Data From The Local Database When They Log Out
         SharedPreferences.Editor userLocalDatabaseEditor = userLocalDatabase.edit();
         userLocalDatabaseEditor.clear();
         userLocalDatabaseEditor.commit();
     }
 
     public User getLoggedInUser() {
+        //Retrieves The User's Information Stored Locally And Creates The User To Be Used
         if (userLocalDatabase.getBoolean("loggedIn", false) == false) {
             return null;
         }

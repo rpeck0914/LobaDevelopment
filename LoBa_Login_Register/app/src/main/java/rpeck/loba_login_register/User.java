@@ -4,6 +4,8 @@ package rpeck.loba_login_register;
  * Created by Robert Peck on 10/7/2015.
  */
 public class User {
+    //User Class Creates Users With All Their Data
+
     String mName, mUserName, mPassword, mCity, mState;
 
     public User(String name, String username, String password, String city, String state) {
