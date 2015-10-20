@@ -17,7 +17,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private UserLocalStore userLocalStore;
     //// TODO: 10/15/2015 Populate State and City Spinners and set default to users data
     //// TODO: 10/15/2015 Get XML to the desired layout to match the concept
-    //// TODO: 10/15/2015 Add splash screen with LoBa logo for startup 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
