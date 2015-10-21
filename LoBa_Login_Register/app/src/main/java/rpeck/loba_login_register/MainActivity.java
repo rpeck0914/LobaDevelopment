@@ -1,6 +1,8 @@
 package rpeck.loba_login_register;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -49,8 +51,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     //authenticate Method Checks To See If The User's Local Data Is Null, If So Loads The Login Intent
     private boolean authenticate() {
         if (userLocalStore.getLoggedInUser() == null) {
-            Intent intent = new Intent(this, Login.class);
-            startActivity(intent);
+            //Intent intent = new Intent(this, Login.class);
+            //startActivity(intent);
             return false;
         }
         return true;
@@ -77,4 +79,20 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 break;
         }
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+//        dialogBuilder.setCancelable(false);
+//        dialogBuilder.setTitle("Exit App");
+//        dialogBuilder.setMessage("Are You Sure You Want To Exit The App?");
+//        dialogBuilder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                finish();
+//            }
+//        });
+//        dialogBuilder.setNegativeButton("No", null);
+//        dialogBuilder.show();
+//    }
 }
