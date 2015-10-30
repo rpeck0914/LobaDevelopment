@@ -5,15 +5,19 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements View.OnClickListener{
+import junit.framework.Test;
+
+public class MainActivity extends FragmentActivity implements View.OnClickListener{
 
     //Private Variables For The Main Activity Layout
-    private Button mButtonLogout;
-    private TextView mLoggedInName;
+    private TextView mLoggedInName, mLogOutLink;
 
     //Creates A Variable For UserLocalStore To Sore The Users Data Locally On Device
     private UserLocalStore userLocalStore;
@@ -24,16 +28,27 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FragmentManager fm = getSupportFragmentManager();
+
+        Fragment fragment = fm.findFragmentById(R.id.top_fragment_container);
+
+        if (fragment == null) {
+            fragment = new CityStateSpinnerFragment();
+            fm.beginTransaction()
+                    .add(R.id.top_fragment_container, fragment)
+                    .commit();
+        }
+
         //Sets The Layout Objects To Their Variables
         mLoggedInName = (TextView) findViewById(R.id.logged_in_name);
 
-        mButtonLogout = (Button) findViewById(R.id.button_logout);
+        mLogOutLink = (TextView) findViewById(R.id.log_out_link);
 
         //Instantiates UserLocalStore Variable To Save Logged In Users Data
         userLocalStore = new UserLocalStore(this);
 
         //On Click Listeners For Clicks On Buttons
-        mButtonLogout.setOnClickListener(this);
+        mLogOutLink.setOnClickListener(this);
     }
 
     @Override
@@ -70,7 +85,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         //Switch Case For Reading The On Click Listeners
         switch (v.getId()) {
-            case R.id.button_logout:
+            case R.id.log_out_link:
                 //If User Clicks Logout Button The Local Data Stored Is Cleared And Then Starts The Login Activity
                 userLocalStore.clearUserData();
                 userLocalStore.setUserLoggedIn(false);
