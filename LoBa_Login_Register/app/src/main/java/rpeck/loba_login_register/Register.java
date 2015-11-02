@@ -25,7 +25,9 @@ public class Register extends Activity implements View.OnClickListener{
     private String[] mSortedCities;
     private int[] mSortedCityId;
 
-    //StateFetching mStateFetching;
+    private int mSelectedCityID;
+
+    ArraySort mArraySort;
 
     //// TODO: 10/15/2015 Get the layout looking better 
 
@@ -47,8 +49,8 @@ public class Register extends Activity implements View.OnClickListener{
 
         //Instantiates A Variable For The States Class
         States states = new States();
-        //Calls pullStates Method While Passing The states Class Variable
 
+        //Calls pullStates Method While Passing The states Class Variable
         pullStates(states);
     }
 
@@ -74,13 +76,14 @@ public class Register extends Activity implements View.OnClickListener{
     }
 
     //loadStateSpinner Method To Load The State Spinner With The States Passed Over From The Database
-    private void loadStateSpinner(final String[] statesToLoad, final int[] statesID) {
+    private void loadStateSpinner(final States statesToLoad) {
 
+        mArraySort = new ArraySort(statesToLoad.states, statesToLoad.stateID);
         //Sends The States And Their ID's Over To Be Sorted
         //sort(statesToLoad.states, statesToLoad.stateID, 1);
 
             //Loads The State Spinner With The Array Of States
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statesToLoad);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mArraySort.getNameArray());
             mSelectState.setAdapter(adapter);
             mSelectState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -91,13 +94,13 @@ public class Register extends Activity implements View.OnClickListener{
                     //Finds The Selected State's ID To Fetch The Cities Within That State
                     int selectedIndex;
                     String selectedState = mSelectState.getSelectedItem().toString();
-                    for (int i = 0; i < statesToLoad.length; i++) {
-                        if (statesToLoad[i] == selectedState) {
-                            selectedIndex = (i);
-                            Log.d("ERROR", statesID[selectedIndex] + "");
+                    for (int i = 0; i < mArraySort.getNameArray().length; i++) {
+                        if (mArraySort.getNameArray()[i] == selectedState) {
+                            selectedIndex = i;
+                            Log.d("ERROR", mArraySort.getIDArray()[selectedIndex] + "");
 
                             //Creates A New City With The StateID
-                            Cities cities = new Cities(statesID[selectedIndex]);
+                            Cities cities = new Cities(mArraySort.getIDArray()[selectedIndex]);
                             //Calls The pullCites Method And Sends The Cities Object Over
                             pullCities(cities);
                         }
@@ -115,11 +118,31 @@ public class Register extends Activity implements View.OnClickListener{
     private void loadCitySpinner(Cities cities) {
 
         //Sends Over The Array Of Cites And Their ID's To Get Sorted
-        sort(cities.citiesArray, cities.cityID, 2);
+        mArraySort = new ArraySort(cities.citiesArray, cities.cityID);
+
+        //sort(cities.citiesArray, cities.cityID, 2);
 
         //Loads The City Spinner With The Array Of Cities
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cities.citiesArray);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mArraySort.getNameArray());
         mSelectCity.setAdapter(adapter);
+        mSelectCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
+                String selectedCity = mSelectCity.getSelectedItem().toString();
+                for (int i = 0; i < mArraySort.getNameArray().length; i++) {
+                    if(mArraySort.getNameArray()[i] == selectedCity) {
+                        mSelectedCityID = i;
+                        Log.d("ERROR", mArraySort.getIDArray()[mSelectedCityID] +"");
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                //Override Method For When Nothing Is Selected In The State Spinner??
+            }
+        });
     }
 
     //registerUser Method Takes The Passed Over User And Sends It Over To Server Requests To Be Added To The Database
@@ -138,30 +161,36 @@ public class Register extends Activity implements View.OnClickListener{
     //pullStates Method Sends A Request To ServerRequests To Pull The State Information From The Database
     private void pullStates(States states){
 
-        StateFetching mStateFetching = new StateFetching(this, states);
+//        StateFetching mStateFetching = new StateFetching(this, states);
+//
+//        mStateFetching.pullStates(states);
+//
+//        boolean mFlag = false;
+//
+//        while (mFlag == false){
+//            mFlag =  mStateFetching.isFlag();
+//        }
+//
+//        if(mStateFetching.getStatesArray() == null || mStateFetching.getStateIDArray() == null){
+//            showErrorMessage(mStateFetching.getErrorMessage().toString());
+//        } else {
+//            loadStateSpinner(mStateFetching.getStatesArray(), mStateFetching.getStateIDArray());
+//        }
 
-        mStateFetching.pullStates(states);
-
-        if(mStateFetching.getStatesArray() == null || mStateFetching.getStateIDArray() == null){
-            showErrorMessage(mStateFetching.getErrorMessage().toString());
-        } else {
-            loadStateSpinner(mStateFetching.getStatesArray(), mStateFetching.getStateIDArray());
-        }
-
-//        ServerRequests serverRequests = new ServerRequests(this);
-//        serverRequests.fetchStateDataAsyncTask(states, new GetStatesCallback() {
-//            @Override
-//            public void done(States returnedStates) {
-//                if(returnedStates == null){
-//                    //If There Is An Error And The States Don't Come Over An Error Message Is Displayed Showing Their Is An Error
-//                    String errorMessage = "Error Loading States";
-//                    showErrorMessage(errorMessage);
-//                }else {
-//                    //If There Is No Errors The States Are Then Sent Over To Be Loaded In The State Spinner
-//                    loadStateSpinner(returnedStates);
-//                }
-//            }
-//        });
+        ServerRequests serverRequests = new ServerRequests(this);
+        serverRequests.fetchStateDataAsyncTask(states, new GetStatesCallback() {
+            @Override
+            public void done(States returnedStates) {
+                if(returnedStates == null){
+                    //If There Is An Error And The States Don't Come Over An Error Message Is Displayed Showing Their Is An Error
+                    String errorMessage = "Error Loading States";
+                    showErrorMessage(errorMessage);
+                }else {
+                    //If There Is No Errors The States Are Then Sent Over To Be Loaded In The State Spinner
+                    loadStateSpinner(returnedStates);
+                }
+            }
+        });
     }
 
     //pullCities Method Sends A Request To ServerRequests With The StateID To Pull The Cites Information From The Database
