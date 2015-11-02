@@ -20,14 +20,15 @@ public class Register extends Activity implements View.OnClickListener{
     private Spinner mSelectState, mSelectCity;
 
     //Private Variables For Holding State And City Information
-    private String[] mSortedStates;
-    private int[] mSortedStateID;
-    private String[] mSortedCities;
-    private int[] mSortedCityId;
+//    private String[] mSortedStates;
+//    private int[] mSortedStateID;
+//    private String[] mSortedCities;
+//    private int[] mSortedCityId;
 
     private int mSelectedCityID;
 
-    ArraySort mArraySort;
+    ArraySort mStateArraySort;
+    ArraySort mCityArraySort;
 
     //// TODO: 10/15/2015 Get the layout looking better 
 
@@ -78,12 +79,12 @@ public class Register extends Activity implements View.OnClickListener{
     //loadStateSpinner Method To Load The State Spinner With The States Passed Over From The Database
     private void loadStateSpinner(final States statesToLoad) {
 
-        mArraySort = new ArraySort(statesToLoad.states, statesToLoad.stateID);
+        mStateArraySort = new ArraySort(statesToLoad.states, statesToLoad.stateID);
         //Sends The States And Their ID's Over To Be Sorted
         //sort(statesToLoad.states, statesToLoad.stateID, 1);
 
             //Loads The State Spinner With The Array Of States
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mArraySort.getNameArray());
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mStateArraySort.getNameArray());
             mSelectState.setAdapter(adapter);
             mSelectState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -94,13 +95,13 @@ public class Register extends Activity implements View.OnClickListener{
                     //Finds The Selected State's ID To Fetch The Cities Within That State
                     int selectedIndex;
                     String selectedState = mSelectState.getSelectedItem().toString();
-                    for (int i = 0; i < mArraySort.getNameArray().length; i++) {
-                        if (mArraySort.getNameArray()[i] == selectedState) {
+                    for (int i = 0; i < mStateArraySort.getNameArray().length; i++) {
+                        if (mStateArraySort.getNameArray()[i] == selectedState) {
                             selectedIndex = i;
-                            Log.d("ERROR", mArraySort.getIDArray()[selectedIndex] + "");
+                            Log.d("ERROR", mStateArraySort.getIDArray()[selectedIndex] + "");
 
                             //Creates A New City With The StateID
-                            Cities cities = new Cities(mArraySort.getIDArray()[selectedIndex]);
+                            Cities cities = new Cities(mStateArraySort.getIDArray()[selectedIndex]);
                             //Calls The pullCites Method And Sends The Cities Object Over
                             pullCities(cities);
                         }
@@ -118,22 +119,22 @@ public class Register extends Activity implements View.OnClickListener{
     private void loadCitySpinner(Cities cities) {
 
         //Sends Over The Array Of Cites And Their ID's To Get Sorted
-        mArraySort = new ArraySort(cities.citiesArray, cities.cityID);
+        mCityArraySort = new ArraySort(cities.citiesArray, cities.cityID);
 
         //sort(cities.citiesArray, cities.cityID, 2);
 
         //Loads The City Spinner With The Array Of Cities
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mArraySort.getNameArray());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mCityArraySort.getNameArray());
         mSelectCity.setAdapter(adapter);
         mSelectCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
                 String selectedCity = mSelectCity.getSelectedItem().toString();
-                for (int i = 0; i < mArraySort.getNameArray().length; i++) {
-                    if(mArraySort.getNameArray()[i] == selectedCity) {
+                for (int i = 0; i < mCityArraySort.getNameArray().length; i++) {
+                    if(mCityArraySort.getNameArray()[i] == selectedCity) {
                         mSelectedCityID = i;
-                        Log.d("ERROR", mArraySort.getIDArray()[mSelectedCityID] +"");
+                        Log.d("ERROR", mCityArraySort.getIDArray()[mSelectedCityID] +"");
                     }
                 }
             }
@@ -219,36 +220,36 @@ public class Register extends Activity implements View.OnClickListener{
         dialogBuilder.show();
     }
 
-    //sort Method Takes The Arrays That Are Sent Over And Sorts Them Alphabetically And Sets Them To The Appropriate Variables
-    private void sort(String[] name, int[] id, int arrayID) {
-        String[] nameArray = name;
-        int[] idArray = id;
-
-        boolean flag = true;
-        String tempState;
-        int tempID;
-
-        while(flag) {
-            flag = false;
-            for (int i = 0; i < nameArray.length - 1; i++) {
-                if(nameArray[i].compareToIgnoreCase(nameArray[i + 1]) > 0) {
-                    tempState = nameArray[i];
-                    tempID = idArray[i];
-                    nameArray[i] = nameArray[i + 1];
-                    idArray[i] = idArray[i + 1];
-                    nameArray[i + 1] = tempState;
-                    idArray[i + 1] = tempID;
-
-                    flag = true;
-                }
-            }
-        }
-        if (arrayID == 1){
-            mSortedStates = nameArray;
-            mSortedStateID = idArray;
-        } else {
-            mSortedCities = nameArray;
-            mSortedCityId = idArray;
-        }
-    }
+//    //sort Method Takes The Arrays That Are Sent Over And Sorts Them Alphabetically And Sets Them To The Appropriate Variables
+//    private void sort(String[] name, int[] id, int arrayID) {
+//        String[] nameArray = name;
+//        int[] idArray = id;
+//
+//        boolean flag = true;
+//        String tempState;
+//        int tempID;
+//
+//        while(flag) {
+//            flag = false;
+//            for (int i = 0; i < nameArray.length - 1; i++) {
+//                if(nameArray[i].compareToIgnoreCase(nameArray[i + 1]) > 0) {
+//                    tempState = nameArray[i];
+//                    tempID = idArray[i];
+//                    nameArray[i] = nameArray[i + 1];
+//                    idArray[i] = idArray[i + 1];
+//                    nameArray[i + 1] = tempState;
+//                    idArray[i + 1] = tempID;
+//
+//                    flag = true;
+//                }
+//            }
+//        }
+//        if (arrayID == 1){
+//            mSortedStates = nameArray;
+//            mSortedStateID = idArray;
+//        } else {
+//            mSortedCities = nameArray;
+//            mSortedCityId = idArray;
+//        }
+//    }
 }

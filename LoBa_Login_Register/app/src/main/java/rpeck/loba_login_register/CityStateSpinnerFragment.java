@@ -28,12 +28,11 @@ public class CityStateSpinnerFragment extends Fragment {
 
     private UserLocalStore mUserLocalStore;
 
-    ArraySort mArraySort;
-    Context mAppContext;
+    ArraySort mStateArraySort;
+    ArraySort mCityArraySort;
 
-    public CityStateSpinnerFragment(Context MainActivity) {
+    public CityStateSpinnerFragment() {
         // Required empty public constructor
-        mAppContext = MainActivity;
     }
 
     @Override
@@ -53,7 +52,7 @@ public class CityStateSpinnerFragment extends Fragment {
 
         pullStates(states);
 
-        mUserLocalStore = new UserLocalStore(mAppContext);
+        mUserLocalStore = new UserLocalStore(getActivity());
 
         setUsersStateAndCitySpinners();
 
@@ -62,7 +61,7 @@ public class CityStateSpinnerFragment extends Fragment {
 
     //pullStates Method Sends A Request To ServerRequests To Pull The State Information From The Database
     private void pullStates(States states){
-        ServerRequests serverRequests = new ServerRequests(mAppContext);
+        ServerRequests serverRequests = new ServerRequests(getActivity());
         serverRequests.fetchStateDataAsyncTask(states, new GetStatesCallback() {
             @Override
             public void done(States returnedStates) {
@@ -80,7 +79,7 @@ public class CityStateSpinnerFragment extends Fragment {
 
     //pullCities Method Sends A Request To ServerRequests With The StateID To Pull The Cites Information From The Database
     private void pullCities(Cities cities) {
-        ServerRequests serverRequests = new ServerRequests(mAppContext);
+        ServerRequests serverRequests = new ServerRequests(getActivity());
         serverRequests.fetchCityDataAsyncTask(cities, new GetCitiesCallback() {
             @Override
             public void done(Cities returnedCities) {
@@ -99,12 +98,12 @@ public class CityStateSpinnerFragment extends Fragment {
     //loadStateSpinner Method To Load The State Spinner With The States Passed Over From The Database
     private void loadStateSpinner(final States statesToLoad) {
 
-        mArraySort = new ArraySort(statesToLoad.states, statesToLoad.stateID);
+        mStateArraySort = new ArraySort(statesToLoad.states, statesToLoad.stateID);
         //Sends The States And Their ID's Over To Be Sorted
         //sort(statesToLoad.states, statesToLoad.stateID, 1);
 
         //Loads The State Spinner With The Array Of States
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(mAppContext, android.R.layout.simple_spinner_item, mArraySort.getNameArray());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mStateArraySort.getNameArray());
         mStateSpinner.setAdapter(adapter);
 
         mStateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -116,13 +115,13 @@ public class CityStateSpinnerFragment extends Fragment {
                 //Finds The Selected State's ID To Fetch The Cities Within That State
                 int selectedIndex;
                 String selectedState = mStateSpinner.getSelectedItem().toString();
-                for (int i = 0; i < mArraySort.getNameArray().length; i++) {
-                    if (mArraySort.getNameArray()[i] == selectedState) {
+                for (int i = 0; i < mStateArraySort.getNameArray().length; i++) {
+                    if (mStateArraySort.getNameArray()[i] == selectedState) {
                         selectedIndex = i;
-                        Log.d("ERROR", mArraySort.getIDArray()[selectedIndex] + "");
+                        Log.d("ERROR", mStateArraySort.getIDArray()[selectedIndex] + "");
 
                         //Creates A New City With The StateID
-                        Cities cities = new Cities(mArraySort.getIDArray()[selectedIndex]);
+                        Cities cities = new Cities(mStateArraySort.getIDArray()[selectedIndex]);
                         //Calls The pullCites Method And Sends The Cities Object Over
                         pullCities(cities);
                     }
@@ -140,22 +139,22 @@ public class CityStateSpinnerFragment extends Fragment {
     private void loadCitySpinner(Cities cities) {
 
         //Sends Over The Array Of Cites And Their ID's To Get Sorted
-        mArraySort = new ArraySort(cities.citiesArray, cities.cityID);
+        mCityArraySort = new ArraySort(cities.citiesArray, cities.cityID);
 
         //sort(cities.citiesArray, cities.cityID, 2);
 
         //Loads The City Spinner With The Array Of Cities
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(mAppContext, android.R.layout.simple_spinner_item, mArraySort.getNameArray());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mCityArraySort.getNameArray());
         mCitySpinner.setAdapter(adapter);
         mCitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
                 String selectedCity = mCitySpinner.getSelectedItem().toString();
-                for (int i = 0; i < mArraySort.getNameArray().length; i++) {
-                    if(mArraySort.getNameArray()[i] == selectedCity) {
+                for (int i = 0; i < mCityArraySort.getNameArray().length; i++) {
+                    if(mCityArraySort.getNameArray()[i] == selectedCity) {
                         mSelectedCityID = i;
-                        Log.d("ERROR", mArraySort.getIDArray()[mSelectedCityID] + "");
+                        Log.d("ERROR", mCityArraySort.getIDArray()[mSelectedCityID] + "");
                     }
                 }
             }
@@ -171,12 +170,12 @@ public class CityStateSpinnerFragment extends Fragment {
 
         User user = mUserLocalStore.getLoggedInUser();
 
-        mStateSpinner.setSelection(mArraySort.getNameArray().getPostition(user.mState.toString()));
+        //mStateSpinner.setSelection(mStateArraySort.getNameArray().getPostition(user.mState.toString()));
     }
 
     //showErrorMessage Method Builds An AlertDialog To Be Shown Letting The User Know Their Was An Error
     private void showErrorMessage(String errormessage) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mAppContext);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setMessage(errormessage);
         dialogBuilder.setPositiveButton("OK", null);
         dialogBuilder.show();

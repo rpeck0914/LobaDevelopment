@@ -33,7 +33,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Fragment fragment = fm.findFragmentById(R.id.top_fragment_container);
 
         if (fragment == null) {
-            fragment = new CityStateSpinnerFragment(this);
+            fragment = new CityStateSpinnerFragment();
             fm.beginTransaction()
                     .add(R.id.top_fragment_container, fragment)
                     .commit();
