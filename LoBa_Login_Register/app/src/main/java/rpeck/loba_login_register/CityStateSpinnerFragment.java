@@ -155,7 +155,7 @@ public class CityStateSpinnerFragment extends Fragment {
             public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
                 String selectedCity = mCitySpinner.getSelectedItem().toString();
                 for (int i = 0; i < mCityArraySort.getNameArray().length; i++) {
-                    if(mCityArraySort.getNameArray()[i] == selectedCity) {
+                    if (mCityArraySort.getNameArray()[i] == selectedCity) {
                         mSelectedCityID = i;
                         Log.d("ERROR", mCityArraySort.getIDArray()[mSelectedCityID] + "");
                     }
@@ -175,8 +175,10 @@ public class CityStateSpinnerFragment extends Fragment {
         User user = mUserLocalStore.getLoggedInUser();
 
         if(user != null && id == "state" && mStateSpinnersLoadedFlag == false) {
+            String stateWithNulls = user.mState.toString();
+            String state = stateWithNulls.replaceAll("\\u0000", "");
             for (int i = 0; i < name.getNameArray().length; i++) {
-                if (user.mState.toString().contains(name.getNameArray()[i].toString())) {
+                if (state.compareToIgnoreCase(name.getNameArray()[i].toString()) == 0) {
                     mStateSpinner.setSelection(i);
                     mStateSpinnersLoadedFlag = true;
                     i = name.getNameArray().length;
@@ -184,20 +186,23 @@ public class CityStateSpinnerFragment extends Fragment {
             }
         }
 
-        if(user != null && id == "city" && mCitySpinnersLoadedFlag == false)
+        if(user != null && id == "city" && mCitySpinnersLoadedFlag == false) {
+            String cityWithNulls = user.mCity.toString();
+            String city = cityWithNulls.replaceAll("\\u0000", "");
             for (int i = 0; i < name.getNameArray().length; i++) {
-                if (user.mCity.toString().contains(name.getNameArray()[i].toString())) {
+                if (city.compareToIgnoreCase(name.getNameArray()[i].toString()) == 0) {
                     mCitySpinner.setSelection(i);
                     mCitySpinnersLoadedFlag = true;
                     i = name.getNameArray().length;
                 }
             }
+        }
     }
 
     //showErrorMessage Method Builds An AlertDialog To Be Shown Letting The User Know Their Was An Error
-    private void showErrorMessage(String errormessage) {
+    private void showErrorMessage(String errorMessage) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setMessage(errormessage);
+        dialogBuilder.setMessage(errorMessage);
         dialogBuilder.setPositiveButton("OK", null);
         dialogBuilder.show();
     }
