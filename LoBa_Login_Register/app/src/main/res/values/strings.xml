@@ -8,12 +8,15 @@
     <string name="title_activity_splash_screen">LoBa</string>
     
     <string name="name_title">Name</string>
-    <string name="email_title">Email</string>
-    <string name="password_title">Create Password</string>
+    <string name="username_title">Username</string>
+    <string name="password_title">Password</string>
+    <string name="create_password_title">Create Password</string>
     <string name="confirm_password_title">Confirm Password</string>
     <string name="state_title">State</string>
     <string name="city_title">City</string>
 
+    <string name="login_button_title">Login</string>
+    <string name="register_link_title">Register Here</string>
     <string name="logout_title">Log Out</string>
 
     <string name="register_button">Register</string>

@@ -11,12 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class Register extends Activity implements View.OnClickListener{
 
     //Private Variables For The Register Activity Layout
     private Button mButtonRegister;
-    private EditText mEnterName, mEnterUserName, mEnterPassword;
+    private EditText mEnterName, mEnterUserName, mEnterPassword, mEnterConfirmPassword;
     private Spinner mSelectState, mSelectCity;
 
     //Private Variables For Holding State And City Information
@@ -41,6 +42,7 @@ public class Register extends Activity implements View.OnClickListener{
         mEnterName = (EditText) findViewById(R.id.enter_name);
         mEnterUserName = (EditText) findViewById(R.id.enter_userName);
         mEnterPassword = (EditText) findViewById(R.id.enter_Password);
+        mEnterConfirmPassword = (EditText) findViewById(R.id.confirm_password);
         mSelectState = (Spinner) findViewById(R.id.enter_state);
         mSelectCity = (Spinner) findViewById(R.id.enter_city);
         mButtonRegister = (Button) findViewById(R.id.button_register);
@@ -65,13 +67,17 @@ public class Register extends Activity implements View.OnClickListener{
                 String name = mEnterName.getText().toString();
                 String username = mEnterUserName.getText().toString();
                 String password = mEnterPassword.getText().toString();
+                String confirmPassword = mEnterConfirmPassword.getText().toString();
                 String state = mSelectState.getSelectedItem().toString();
                 String city = mSelectCity.getSelectedItem().toString();
-                //// TODO: 10/15/2015 Add Validation For Users Registering
-                User user = new User(name, username, password, city, state);
 
-                //Sends The Newly Created User Over To The registerUser Method
-                registerUser(user);
+                if (validateRegisteringUser(name, username, password, confirmPassword)) {
+                    //Creates A New User With Valid Input
+                    User user = new User(name, username, password, city, state);
+
+                    //Sends The Newly Created User Over To The registerUser Method
+                    registerUser(user);
+                }
                 break;
         }
     }
@@ -134,7 +140,7 @@ public class Register extends Activity implements View.OnClickListener{
                 for (int i = 0; i < mCityArraySort.getNameArray().length; i++) {
                     if(mCityArraySort.getNameArray()[i] == selectedCity) {
                         mSelectedCityID = i;
-                        Log.d("ERROR", mCityArraySort.getIDArray()[mSelectedCityID] +"");
+                        Log.d("ERROR", mCityArraySort.getIDArray()[mSelectedCityID] + "");
                     }
                 }
             }
@@ -161,32 +167,15 @@ public class Register extends Activity implements View.OnClickListener{
 
     //pullStates Method Sends A Request To ServerRequests To Pull The State Information From The Database
     private void pullStates(States states){
-
-//        StateFetching mStateFetching = new StateFetching(this, states);
-//
-//        mStateFetching.pullStates(states);
-//
-//        boolean mFlag = false;
-//
-//        while (mFlag == false){
-//            mFlag =  mStateFetching.isFlag();
-//        }
-//
-//        if(mStateFetching.getStatesArray() == null || mStateFetching.getStateIDArray() == null){
-//            showErrorMessage(mStateFetching.getErrorMessage().toString());
-//        } else {
-//            loadStateSpinner(mStateFetching.getStatesArray(), mStateFetching.getStateIDArray());
-//        }
-
         ServerRequests serverRequests = new ServerRequests(this);
         serverRequests.fetchStateDataAsyncTask(states, new GetStatesCallback() {
             @Override
             public void done(States returnedStates) {
-                if(returnedStates == null){
+                if (returnedStates == null) {
                     //If There Is An Error And The States Don't Come Over An Error Message Is Displayed Showing Their Is An Error
                     String errorMessage = "Error Loading States";
                     showErrorMessage(errorMessage);
-                }else {
+                } else {
                     //If There Is No Errors The States Are Then Sent Over To Be Loaded In The State Spinner
                     loadStateSpinner(returnedStates);
                 }
@@ -220,36 +209,31 @@ public class Register extends Activity implements View.OnClickListener{
         dialogBuilder.show();
     }
 
-//    //sort Method Takes The Arrays That Are Sent Over And Sorts Them Alphabetically And Sets Them To The Appropriate Variables
-//    private void sort(String[] name, int[] id, int arrayID) {
-//        String[] nameArray = name;
-//        int[] idArray = id;
-//
-//        boolean flag = true;
-//        String tempState;
-//        int tempID;
-//
-//        while(flag) {
-//            flag = false;
-//            for (int i = 0; i < nameArray.length - 1; i++) {
-//                if(nameArray[i].compareToIgnoreCase(nameArray[i + 1]) > 0) {
-//                    tempState = nameArray[i];
-//                    tempID = idArray[i];
-//                    nameArray[i] = nameArray[i + 1];
-//                    idArray[i] = idArray[i + 1];
-//                    nameArray[i + 1] = tempState;
-//                    idArray[i + 1] = tempID;
-//
-//                    flag = true;
-//                }
-//            }
-//        }
-//        if (arrayID == 1){
-//            mSortedStates = nameArray;
-//            mSortedStateID = idArray;
-//        } else {
-//            mSortedCities = nameArray;
-//            mSortedCityId = idArray;
-//        }
-//    }
+    private boolean validateRegisteringUser(String name, String username, String password, String confirmPassword) {
+        boolean userValid = false;
+
+        if (!name.isEmpty() && name != null) {
+            if (!username.isEmpty() && username != null) {
+                if (!password.isEmpty() && password != null) {
+                    if (!confirmPassword.isEmpty() && confirmPassword != null) {
+                        if (password.equals(confirmPassword)) {
+                            userValid = true;
+                        } else {
+                            Toast.makeText(this, "Passwords Do Not Match", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Please ReEnter Your Password", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "Please Enter A Password", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Please Enter A Username!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Please Enter A Name!", Toast.LENGTH_SHORT).show();
+        }
+
+        return userValid;
+    }
 }

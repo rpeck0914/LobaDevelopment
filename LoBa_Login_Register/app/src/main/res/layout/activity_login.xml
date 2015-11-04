@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="UserName"/>
+        android:text="@string/username_title"/>
 
     <EditText
         android:id="@+id/enter_username"
@@ -31,7 +31,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password"/>
+        android:text="@string/password_title"/>
 
     <EditText
         android:id="@+id/enter_Password"
@@ -44,14 +44,14 @@
         android:id="@+id/button_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/login_button_title"
         android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/register_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register Here"
+        android:text="@string/register_link_title"
         android:layout_gravity="center_horizontal"
         android:textStyle="bold"/>
 

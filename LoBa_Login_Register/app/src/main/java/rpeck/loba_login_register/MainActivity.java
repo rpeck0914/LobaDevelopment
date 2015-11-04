@@ -21,7 +21,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     //Creates A Variable For UserLocalStore To Sore The Users Data Locally On Device
     private UserLocalStore userLocalStore;
-    //// TODO: 10/15/2015 Populate State and City Spinners and set default to users data
     //// TODO: 10/15/2015 Get XML to the desired layout to match the concept
     @Override
     protected void onCreate(Bundle savedInstanceState) {
