@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -28,8 +27,11 @@ public class CityStateSpinnerFragment extends Fragment {
 
     private UserLocalStore mUserLocalStore;
 
-    ArraySort mStateArraySort;
-    ArraySort mCityArraySort;
+    private static ArraySort mStateArraySort;
+    private static ArraySort mCityArraySort;
+
+    private boolean mStateSpinnersLoadedFlag = false;
+    private boolean mCitySpinnersLoadedFlag = false;
 
     public CityStateSpinnerFragment() {
         // Required empty public constructor
@@ -54,7 +56,7 @@ public class CityStateSpinnerFragment extends Fragment {
 
         mUserLocalStore = new UserLocalStore(getActivity());
 
-        setUsersStateAndCitySpinners();
+
 
         return v;
     }
@@ -65,11 +67,11 @@ public class CityStateSpinnerFragment extends Fragment {
         serverRequests.fetchStateDataAsyncTask(states, new GetStatesCallback() {
             @Override
             public void done(States returnedStates) {
-                if(returnedStates == null){
+                if (returnedStates == null) {
                     //If There Is An Error And The States Don't Come Over An Error Message Is Displayed Showing Their Is An Error
                     String errorMessage = "Error Loading States";
                     showErrorMessage(errorMessage);
-                }else {
+                } else {
                     //If There Is No Errors The States Are Then Sent Over To Be Loaded In The State Spinner
                     loadStateSpinner(returnedStates);
                 }
@@ -133,6 +135,7 @@ public class CityStateSpinnerFragment extends Fragment {
                 //Override Method For When Nothing Is Selected In The State Spinner??
             }
         });
+        setUsersStateAndCitySpinners(mStateArraySort, "state");
     }
 
     //loadCitySpinner Method To Load The Cities Spinner With The Cities Passed Over From The Database Based On The Selected State
@@ -164,13 +167,31 @@ public class CityStateSpinnerFragment extends Fragment {
                 //Override Method For When Nothing Is Selected In The State Spinner??
             }
         });
+        setUsersStateAndCitySpinners(mCityArraySort, "city");
     }
 
-    private void setUsersStateAndCitySpinners() {
+    private void setUsersStateAndCitySpinners(ArraySort name, String id) {
 
         User user = mUserLocalStore.getLoggedInUser();
 
-        //mStateSpinner.setSelection(mStateArraySort.getNameArray().getPostition(user.mState.toString()));
+        if(user != null && id == "state" && mStateSpinnersLoadedFlag == false) {
+            for (int i = 0; i < name.getNameArray().length; i++) {
+                if (user.mState.toString().contains(name.getNameArray()[i].toString())) {
+                    mStateSpinner.setSelection(i);
+                    mStateSpinnersLoadedFlag = true;
+                    i = name.getNameArray().length;
+                }
+            }
+        }
+
+        if(user != null && id == "city" && mCitySpinnersLoadedFlag == false)
+            for (int i = 0; i < name.getNameArray().length; i++) {
+                if (user.mCity.toString().contains(name.getNameArray()[i].toString())) {
+                    mCitySpinner.setSelection(i);
+                    mCitySpinnersLoadedFlag = true;
+                    i = name.getNameArray().length;
+                }
+            }
     }
 
     //showErrorMessage Method Builds An AlertDialog To Be Shown Letting The User Know Their Was An Error
