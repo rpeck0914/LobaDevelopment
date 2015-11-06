@@ -1,5 +1,5 @@
 <?php
-    $con=mysqli_connect("mysql10.000webhost.com","a4937391_loba","loba12dev","a4937391_loba");
+    $con=mysqli_connect("mysql10.000webhost.com","a4937391_loba","loba54dev","a4937391_loba");
       
     $username = $_POST["username"];
 	$password = $_POST["password"];
@@ -9,7 +9,7 @@
     mysqli_stmt_execute($statement);
     
     mysqli_stmt_store_result($statement);
-    mysqli_stmt_bind_result($statement, $userID, $name, $username, $password, $city, $state);
+    mysqli_stmt_bind_result($statement, $userID, $name, $username, $password, $city, $state, $cityID);
     
     $user = array();
     
@@ -19,6 +19,7 @@
         $user["password"] = $password;
 		$user["city"] = $city;
 		$user["state"] = $state;
+		$user["cityid"] = $cityID;
     }
     
     echo json_encode($user);

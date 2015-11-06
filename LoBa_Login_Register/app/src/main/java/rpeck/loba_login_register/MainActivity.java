@@ -21,20 +21,31 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     //Creates A Variable For UserLocalStore To Sore The Users Data Locally On Device
     private UserLocalStore userLocalStore;
+    private BarIDs mBarIDs;
+    private CityStateSpinnerFragment mCityStateSpinnerFragment;
     //// TODO: 10/15/2015 Get XML to the desired layout to match the concept
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm1 = getSupportFragmentManager();
+        FragmentManager fm2 = getSupportFragmentManager();
 
-        Fragment fragment = fm.findFragmentById(R.id.top_fragment_container);
+        Fragment fragment1 = fm1.findFragmentById(R.id.top_fragment_container);
+        Fragment fragment2 = fm2.findFragmentById(R.id.bottom_fragment_container);
 
-        if (fragment == null) {
-            fragment = new CityStateSpinnerFragment();
-            fm.beginTransaction()
-                    .add(R.id.top_fragment_container, fragment)
+        if (fragment1 == null) {
+            fragment1 = new CityStateSpinnerFragment();
+            fm1.beginTransaction()
+                    .add(R.id.top_fragment_container, fragment1)
+                    .commit();
+        }
+
+        if (fragment2 == null){
+            fragment2 = new BarDetailsFragment();
+            fm2.beginTransaction()
+                    .add(R.id.bottom_fragment_container, fragment2)
                     .commit();
         }
 
@@ -77,7 +88,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         User user = userLocalStore.getLoggedInUser();
 
         mLoggedInName.setText(user.mName);
-
     }
 
     @Override
@@ -93,7 +103,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
         }
     }
-
 //    @Override
 //    public void onBackPressed() {
 //        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);

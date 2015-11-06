@@ -13,6 +13,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class Register extends Activity implements View.OnClickListener{
 
     //Private Variables For The Register Activity Layout
@@ -20,16 +25,12 @@ public class Register extends Activity implements View.OnClickListener{
     private EditText mEnterName, mEnterUserName, mEnterPassword, mEnterConfirmPassword;
     private Spinner mSelectState, mSelectCity;
 
-    //Private Variables For Holding State And City Information
-//    private String[] mSortedStates;
-//    private int[] mSortedStateID;
-//    private String[] mSortedCities;
-//    private int[] mSortedCityId;
-
     private int mSelectedCityID;
 
     ArraySort mStateArraySort;
     ArraySort mCityArraySort;
+
+    Encryption mEncryption;
 
     //// TODO: 10/15/2015 Get the layout looking better 
 
@@ -67,13 +68,19 @@ public class Register extends Activity implements View.OnClickListener{
                 String name = mEnterName.getText().toString();
                 String username = mEnterUserName.getText().toString();
                 String password = mEnterPassword.getText().toString();
+                mEncryption = new Encryption(password);
+                password = mEncryption.getResult();
+                //password = md5(password);
                 String confirmPassword = mEnterConfirmPassword.getText().toString();
+                mEncryption = new Encryption(confirmPassword);
+                confirmPassword = mEncryption.getResult();
+                //confirmPassword = md5(confirmPassword);
                 String state = mSelectState.getSelectedItem().toString();
                 String city = mSelectCity.getSelectedItem().toString();
 
                 if (validateRegisteringUser(name, username, password, confirmPassword)) {
                     //Creates A New User With Valid Input
-                    User user = new User(name, username, password, city, state);
+                    User user = new User(name, username, password, city, state, mSelectedCityID);
 
                     //Sends The Newly Created User Over To The registerUser Method
                     registerUser(user);

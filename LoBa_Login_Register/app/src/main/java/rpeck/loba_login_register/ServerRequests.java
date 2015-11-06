@@ -17,6 +17,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -65,6 +66,11 @@ public class ServerRequests {
         //Method To Fetch The Array Of Cities Stored In The Database, This Is Based Off The StateID
         progressDialog.show();
         new FetchCityDataAsyncTask(cities, getCitiesCallback).execute();
+    }
+
+    public void fetchBarIDsDataAsyncTask(BarIDs barIDs, GetBarIDsCallback getBarIDsCallback) {
+        progressDialog.show();
+        new FetchBarIDsDataAsyncTask(barIDs, getBarIDsCallback).execute();
     }
 
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -167,9 +173,10 @@ public class ServerRequests {
                     String name = jObject.getString("name");
                     String city = jObject.getString("city");
                     String state = jObject.getString("state");
+                    int cityid = jObject.getInt("cityid");
 
                     //New User Is Created Off The Returned Information From The Database
-                    returnedUser = new User(name, user.mUserName, user.mPassword, city, state);
+                    returnedUser = new User(name, user.mUserName, user.mPassword, city, state, cityid);
                 }
 
             } catch (Exception e) {
@@ -324,6 +331,63 @@ public class ServerRequests {
             progressDialog.dismiss();
             //Calls The Cities Call Back Interface To Show The Execution Is Done
             citiesCallback.done(returnedCities);
+        }
+    }
+
+    public class FetchBarIDsDataAsyncTask extends AsyncTask<Void, Void, BarIDs> {
+        BarIDs mBarIDs;
+        GetBarIDsCallback mGetBarIDsCallback;
+        private int[] barIDsArray;
+
+        public FetchBarIDsDataAsyncTask(BarIDs barIDs, GetBarIDsCallback getBarIDsCallback) {
+            this.mBarIDs = barIDs;
+            this.mGetBarIDsCallback = getBarIDsCallback;
+        }
+
+        @Override
+        protected BarIDs doInBackground(Void... params) {
+            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
+            dataToSend.add(new BasicNameValuePair("cityid", mBarIDs.cityid + ""));
+
+            HttpParams httpRequestParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+
+            HttpClient client = new DefaultHttpClient(httpRequestParams);
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "FetchBarIDs.php");
+
+            BarIDs returnedBarIDs = null;
+
+            try {
+                post.setEntity(new UrlEncodedFormEntity(dataToSend));
+                HttpResponse httpResponse = client.execute(post);
+
+                HttpEntity entity = httpResponse.getEntity();
+                String result = EntityUtils.toString(entity);
+                JSONArray jArray = new JSONArray(URLDecoder.decode(result, "UTF-8"));
+                //JSONObject jObject = new JSONObject(URLDecoder.decode(result, "UTF-8"));
+
+                barIDsArray = new int[jArray.length()];
+                //Iterator<String> keys = jArray.keys();
+
+                for (int i = 0; i < jArray.length(); i++) {
+                    //String key = keys.next();
+                    barIDsArray[i] = jArray.getInt(i);
+                }
+
+                returnedBarIDs = new BarIDs(jArray.length(), barIDsArray);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return returnedBarIDs;
+        }
+
+        @Override
+        protected void onPostExecute(BarIDs returnedBarIDs) {
+            super.onPostExecute(returnedBarIDs);
+            progressDialog.dismiss();
+            mGetBarIDsCallback.done(returnedBarIDs);
         }
     }
 }

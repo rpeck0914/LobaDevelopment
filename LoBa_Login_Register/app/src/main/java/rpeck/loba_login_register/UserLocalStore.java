@@ -25,6 +25,7 @@ public class UserLocalStore {
         userLocalDatabaseEditor.putString("password", user.mPassword);
         userLocalDatabaseEditor.putString("city", user.mCity);
         userLocalDatabaseEditor.putString("state", user.mState);
+        userLocalDatabaseEditor.putInt("cityid", user.mCityID);
         userLocalDatabaseEditor.commit();
     }
 
@@ -53,8 +54,9 @@ public class UserLocalStore {
         String password = userLocalDatabase.getString("password", "");
         String city = userLocalDatabase.getString("city", "");
         String state = userLocalDatabase.getString("state", "");
+        int cityid = userLocalDatabase.getInt("cityid", 1);
 
-        User user = new User(name, username, password, city, state);
+        User user = new User(name, username, password, city, state, cityid);
         return user;
     }
 }

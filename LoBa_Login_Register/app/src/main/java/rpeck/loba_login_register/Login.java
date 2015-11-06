@@ -21,6 +21,8 @@ public class Login extends Activity implements View.OnClickListener {
 
     //Creates A Variable For UserLocalStore To Sore The Users Data Locally On Device
     UserLocalStore userLocalStore;
+
+    Encryption mEncryption;
     
     //// TODO: 10/15/2015 Get the layout looking better
 
@@ -52,6 +54,8 @@ public class Login extends Activity implements View.OnClickListener {
                 //Captures User Input When Clicking LogIn Button
                 String username = mEnterUserName.getText().toString();
                 String password = mEnterPassword.getText().toString();
+                mEncryption = new Encryption(password);
+                password = mEncryption.getResult();
 
                 //Creates A User Based On The User's Input
                 User user = new User(username, password);

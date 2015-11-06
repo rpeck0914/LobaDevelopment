@@ -27,6 +27,8 @@ public class CityStateSpinnerFragment extends Fragment {
 
     private UserLocalStore mUserLocalStore;
 
+    private BarIDs mBarIDs;
+
     private static ArraySort mStateArraySort;
     private static ArraySort mCityArraySort;
 
@@ -153,11 +155,14 @@ public class CityStateSpinnerFragment extends Fragment {
 
             @Override
             public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
+                int selectedIndex;
                 String selectedCity = mCitySpinner.getSelectedItem().toString();
                 for (int i = 0; i < mCityArraySort.getNameArray().length; i++) {
-                    if (mCityArraySort.getNameArray()[i] == selectedCity) {
-                        mSelectedCityID = i;
-                        Log.d("ERROR", mCityArraySort.getIDArray()[mSelectedCityID] + "");
+                    if (mCityArraySort.getNameArray()[i].equals(selectedCity)) {
+                        selectedIndex = i;
+                        Log.d("ERROR", mCityArraySort.getIDArray()[selectedIndex] + "");
+                        mSelectedCityID = mCityArraySort.getIDArray()[selectedIndex];
+                        pullBarIDs();
                     }
                 }
             }
@@ -199,11 +204,32 @@ public class CityStateSpinnerFragment extends Fragment {
         }
     }
 
+    private void pullBarIDs() {
+        mBarIDs = new BarIDs(mSelectedCityID);
+
+        ServerRequests serverRequests = new ServerRequests(getActivity());
+        serverRequests.fetchBarIDsDataAsyncTask(mBarIDs, new GetBarIDsCallback() {
+            @Override
+            public void done(BarIDs returnedBarIDs) {
+                if (returnedBarIDs == null) {
+                    String errorMessage = "Error Fetching Bar Data";
+                    showErrorMessage(errorMessage);
+                } else {
+                    mBarIDs = returnedBarIDs;
+                }
+            }
+        });
+    }
+
     //showErrorMessage Method Builds An AlertDialog To Be Shown Letting The User Know Their Was An Error
     private void showErrorMessage(String errorMessage) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setMessage(errorMessage);
         dialogBuilder.setPositiveButton("OK", null);
         dialogBuilder.show();
+    }
+
+    public BarIDs getBarIDs() {
+        return mBarIDs;
     }
 }

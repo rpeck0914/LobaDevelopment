@@ -1,5 +1,5 @@
 <?php
-    $con=mysqli_connect("mysql10.000webhost.com","a4937391_loba","loba12dev","a4937391_loba");
+    $con=mysqli_connect("mysql10.000webhost.com","a4937391_loba","loba54dev","a4937391_loba");
 	
 	$statement = mysqli_prepare($con, "SELECT * FROM StateDetails");
 	mysqli_stmt_execute($statement);
