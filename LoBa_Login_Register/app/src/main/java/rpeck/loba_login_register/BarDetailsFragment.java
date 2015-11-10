@@ -10,19 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class BarDetailsFragment extends Fragment {
 
     private RecyclerView mBarRecyclerView;
-
     private BarAdapter mAdapter;
+
+    CityStateSpinnerFragment mCityStateSpinnerFragment = new CityStateSpinnerFragment();
 
     public BarDetailsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,30 +32,36 @@ public class BarDetailsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_bar_details, container, false);
 
         mBarRecyclerView = (RecyclerView) v.findViewById(R.id.bar_recycler_view);
-
         mBarRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+//        if(mCityStateSpinnerFragment.updateUIFlag) {
         updateUI();
-
+//            mCityStateSpinnerFragment.updateUIFlag = false;
+//        }
         return v;
     }
 
-    private void updateUI() {
-        //// TODO: 11/5/2015 Get This Finished and Working
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
 
-        //BarLab barLab = BarLab.get(getActivity());
-        //List<Bar> bars = barLab.getBars();
-        //mAdapter = new BarAdapter(bars);
-        //mBarRecyclerView.setAdapter(mAdapter);
+    private void updateUI() {
+        BarLab barLab = BarLab.get(getActivity());
+        List<Bar> bars = barLab.getBars();
+
+        mAdapter = new BarAdapter(bars);
+        mBarRecyclerView.setAdapter(mAdapter);
 
     }
 
     private class BarHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mBarNameTextView;
-        private int mSelectedBarID;
+        //private int mSelectedBarID;
 
-        //private Bar mBar
+        private Bar mBar;
 
         public BarHolder(View itemView) {
             super(itemView);
@@ -61,12 +69,11 @@ public class BarDetailsFragment extends Fragment {
             
             mBarNameTextView = (TextView) itemView.findViewById(R.id.bar_name);
         }
-        
-        //// TODO: 11/5/2015 need to get a bar class and bar singleton made.
-        public void bindBar(/** Bar bar */) {
-            //mBar = bar;
 
-            //mBarNameTextView.setText(mBar.getName());
+        public void bindBar(Bar bar) {
+            mBar = bar;
+
+            mBarNameTextView.setText(mBar.mBarName);
         }
 
         @Override
@@ -74,17 +81,17 @@ public class BarDetailsFragment extends Fragment {
             //mSelectedBarID = mBar.getName();
         }
 
-        public int getSelectedBarID() {
-            return mSelectedBarID;
-        }
+//        public int getSelectedBarID() {
+//            return mSelectedBarID;
+//        }
     }
 
     private class BarAdapter extends RecyclerView.Adapter<BarHolder> {
 
-        //private List<Bar> mBars;
+        private List<Bar> mBars;
 
-        public BarAdapter(/**List<Bar> bars*/) {
-            //mBars = bars;
+        public BarAdapter(List<Bar> bars) {
+            mBars = bars;
         }
 
         @Override
@@ -97,16 +104,13 @@ public class BarDetailsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(BarHolder barHolder, int i) {
-            //Bar bar = mBars.get(position);
-            //barHolder.bindBar(bar);
+            Bar bar = mBars.get(i);
+            barHolder.bindBar(bar);
         }
 
         @Override
         public int getItemCount() {
-            //return mbars.size();
-            return 0;
+            return mBars.size();
         }
-
-
     }
 }

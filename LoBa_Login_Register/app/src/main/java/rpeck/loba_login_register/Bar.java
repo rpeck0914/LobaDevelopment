@@ -11,8 +11,10 @@ public class Bar {
     public int mBarZipCode;
     public String mBarPhone;
 
-    public Bar() {
+    public Bar() { }
 
+    public Bar(int barID) {
+        mBarID = barID;
     }
 
     public Bar(int barID, String barName, String barAddress, int barZipCode, String barPhone) {

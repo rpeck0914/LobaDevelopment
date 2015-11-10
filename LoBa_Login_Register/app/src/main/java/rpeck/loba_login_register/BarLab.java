@@ -24,5 +24,26 @@ public class BarLab {
     private BarLab(Context context) {
         mBars = new ArrayList<>();
 
+        for(int i = 0; i < 20; i++) {
+            Bar bar = new Bar();
+            bar.mBarID = i;
+            bar.mBarName =  "Bar #" + i;
+            bar.mBarAddress = "123 Main St.";
+            bar.mBarZipCode = 1234;
+            bar.mBarPhone = "123-234-1242";
+        }
+
+        //mBars = BarsArrayList.getmBarList();
+    }
+
+    public List<Bar> getBars() { return mBars; }
+
+    public Bar getBar(int barid) {
+        for (Bar bar : mBars) {
+            if (bar.mBarID == barid) {
+                return bar;
+            }
+        }
+        return null;
     }
 }

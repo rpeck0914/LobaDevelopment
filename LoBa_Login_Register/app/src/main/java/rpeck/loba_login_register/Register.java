@@ -111,7 +111,7 @@ public class Register extends Activity implements View.OnClickListener{
                     for (int i = 0; i < mStateArraySort.getNameArray().length; i++) {
                         if (mStateArraySort.getNameArray()[i] == selectedState) {
                             selectedIndex = i;
-                            Log.d("ERROR", mStateArraySort.getIDArray()[selectedIndex] + "");
+                            Log.d("ERROR", mStateArraySort.getIDArray()[selectedIndex] + " State");
 
                             //Creates A New City With The StateID
                             Cities cities = new Cities(mStateArraySort.getIDArray()[selectedIndex]);
@@ -143,11 +143,13 @@ public class Register extends Activity implements View.OnClickListener{
 
             @Override
             public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
+                int selectedIndex;
                 String selectedCity = mSelectCity.getSelectedItem().toString();
                 for (int i = 0; i < mCityArraySort.getNameArray().length; i++) {
-                    if(mCityArraySort.getNameArray()[i] == selectedCity) {
-                        mSelectedCityID = i;
-                        Log.d("ERROR", mCityArraySort.getIDArray()[mSelectedCityID] + "");
+                    if (mCityArraySort.getNameArray()[i].equals(selectedCity)) {
+                        selectedIndex = i;
+                        Log.d("ERROR", mCityArraySort.getIDArray()[selectedIndex] + "");
+                        mSelectedCityID = mCityArraySort.getIDArray()[selectedIndex];
                     }
                 }
             }

@@ -27,13 +27,15 @@ public class CityStateSpinnerFragment extends Fragment {
 
     private UserLocalStore mUserLocalStore;
 
-    private BarIDs mBarIDs;
+    private BarIDs mBarID;
 
     private static ArraySort mStateArraySort;
     private static ArraySort mCityArraySort;
 
     private boolean mStateSpinnersLoadedFlag = false;
     private boolean mCitySpinnersLoadedFlag = false;
+
+    public boolean updateUIFlag = false;
 
     public CityStateSpinnerFragment() {
         // Required empty public constructor
@@ -53,13 +55,9 @@ public class CityStateSpinnerFragment extends Fragment {
         mCitySpinner = (Spinner) v.findViewById(R.id.enter_city);
 
         States states = new States();
-
         pullStates(states);
 
         mUserLocalStore = new UserLocalStore(getActivity());
-
-
-
         return v;
     }
 
@@ -162,7 +160,7 @@ public class CityStateSpinnerFragment extends Fragment {
                         selectedIndex = i;
                         Log.d("ERROR", mCityArraySort.getIDArray()[selectedIndex] + "");
                         mSelectedCityID = mCityArraySort.getIDArray()[selectedIndex];
-                        pullBarIDs();
+                        //pullBarIDs();
                     }
                 }
             }
@@ -205,20 +203,39 @@ public class CityStateSpinnerFragment extends Fragment {
     }
 
     private void pullBarIDs() {
-        mBarIDs = new BarIDs(mSelectedCityID);
+        mBarID = new BarIDs(mSelectedCityID);
 
         ServerRequests serverRequests = new ServerRequests(getActivity());
-        serverRequests.fetchBarIDsDataAsyncTask(mBarIDs, new GetBarIDsCallback() {
+        serverRequests.fetchBarIDsDataAsyncTask(mBarID, new GetBarIDsCallback() {
             @Override
             public void done(BarIDs returnedBarIDs) {
                 if (returnedBarIDs == null) {
                     String errorMessage = "Error Fetching Bar Data";
                     showErrorMessage(errorMessage);
                 } else {
-                    mBarIDs = returnedBarIDs;
+                    mBarID = returnedBarIDs;
+                    pullBarsFromCity(returnedBarIDs);
                 }
             }
         });
+    }
+
+    private void pullBarsFromCity(BarIDs barids) {
+        for(int i = 0; i < barids.mBarIDs.length; i++) {
+            Bar barToPull = new Bar(mBarID.mBarIDs[i]);
+            ServerRequests serverRequests = new ServerRequests(getActivity());
+            serverRequests.fetchBarsDataAsyncTask(barToPull, new GetBarsCallBack() {
+                @Override
+                public void done(Bar returnedBar) {
+                    if(returnedBar == null) {
+                        String errorMessage = "Error Fetching Bar Data";
+                        showErrorMessage(errorMessage);
+                    }
+                }
+            });
+        }
+        updateUIFlag = true;
+        //BarDetailsFragment barDetailsFragment = new BarDetailsFragment(getActivity());
     }
 
     //showErrorMessage Method Builds An AlertDialog To Be Shown Letting The User Know Their Was An Error
@@ -229,7 +246,7 @@ public class CityStateSpinnerFragment extends Fragment {
         dialogBuilder.show();
     }
 
-    public BarIDs getBarIDs() {
-        return mBarIDs;
-    }
+//    public BarIDs getBarIDs() {
+//        return mBarID;
+//    }
 }

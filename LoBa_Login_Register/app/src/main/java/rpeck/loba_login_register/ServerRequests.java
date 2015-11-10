@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class ServerRequests {
@@ -73,6 +74,11 @@ public class ServerRequests {
         new FetchBarIDsDataAsyncTask(barIDs, getBarIDsCallback).execute();
     }
 
+    public void fetchBarsDataAsyncTask(Bar bar, GetBarsCallBack getBarsCallBack) {
+        progressDialog.show();
+        new FetchBarsDataAsyncTask(bar, getBarsCallBack).execute();
+    }
+
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void> {
         //Class That Takes The User's Data And Sends The Information Over To Be Stored In The Database
         User user;
@@ -93,6 +99,7 @@ public class ServerRequests {
             dataToSend.add(new BasicNameValuePair("password", user.mPassword));
             dataToSend.add(new BasicNameValuePair("city", user.mCity));
             dataToSend.add(new BasicNameValuePair("state", user.mState));
+            dataToSend.add(new BasicNameValuePair("cityid", user.mCityID + ""));
 
             //Sets All The HTTP Variables To Connect To The Database
             HttpParams httpRequestParams = getHttpRequestParams();
@@ -388,6 +395,64 @@ public class ServerRequests {
             super.onPostExecute(returnedBarIDs);
             progressDialog.dismiss();
             mGetBarIDsCallback.done(returnedBarIDs);
+        }
+    }
+
+    public class FetchBarsDataAsyncTask extends AsyncTask<Void, Void, Bar> {
+        Bar mBar;
+        GetBarsCallBack mGetBarsCallBack;
+        BarsArrayList mBarsArrayList;
+
+        public FetchBarsDataAsyncTask(Bar bar, GetBarsCallBack getBarsCallBack) {
+            mBar = bar;
+            mGetBarsCallBack = getBarsCallBack;
+            //mBarsArrayList = new BarsArrayList();
+        }
+
+        @Override
+        protected Bar doInBackground(Void... params) {
+            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
+            dataToSend.add(new BasicNameValuePair("barid", mBar.mBarID + ""));
+
+            HttpParams httpRequestParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+
+            HttpClient client = new DefaultHttpClient(httpRequestParams);
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "FetchBarData.php");
+
+            Bar returnedBar = null;
+
+            try {
+                post.setEntity(new UrlEncodedFormEntity(dataToSend));
+                HttpResponse httpResponse = client.execute(post);
+
+                HttpEntity entity = httpResponse.getEntity();
+                String result = EntityUtils.toString(entity);
+                JSONObject jObject = new JSONObject(result);
+
+                if(jObject.length() != 0) {
+                    String barName  = jObject.getString("barname");
+                    String barAddress = jObject.getString("baraddress");
+                    int barZipCode = jObject.getInt("barzipcode");
+                    String barPhone = jObject.getString("phone");
+
+                    returnedBar = new Bar(mBar.mBarID, barName, barAddress, barZipCode, barPhone);
+
+                    mBarsArrayList = new BarsArrayList(returnedBar);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return returnedBar;
+        }
+
+        @Override
+        protected void onPostExecute(Bar returnedBar) {
+            super.onPostExecute(returnedBar);
+            progressDialog.dismiss();
+            mGetBarsCallBack.done(returnedBar);
         }
     }
 }

@@ -23,6 +23,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private UserLocalStore userLocalStore;
     private BarIDs mBarIDs;
     private CityStateSpinnerFragment mCityStateSpinnerFragment;
+
+
     //// TODO: 10/15/2015 Get XML to the desired layout to match the concept
     @Override
     protected void onCreate(Bundle savedInstanceState) {

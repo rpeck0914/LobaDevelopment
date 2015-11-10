@@ -14,7 +14,6 @@
 	$bars = array();
 	
 	while(mysqli_stmt_fetch($statement)) {
-		$bars["barid"] = $barID;
 		$bars["barname"] = $barname;
 		$bars["baraddress"] = $baraddress;
 		$bars["barzipcode"] = $barzipcode;
