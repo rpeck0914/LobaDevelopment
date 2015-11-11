@@ -4,7 +4,9 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="rpeck.loba_login_register.BarDetailsFragment">
+              tools:context="rpeck.loba_login_register.BarDetailsFragment"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp">
 
     <View
         android:layout_width="match_parent"
@@ -20,9 +22,9 @@
             android:id="@+id/bar_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bell's Eccentric Cafe"
             android:textSize="25dp"
             android:gravity="center"
+            android:hint="Bar Name"
             android:textColor="@color/bar_detail_text_color"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"/>

@@ -12,7 +12,7 @@ public class BarLab {
 
     private static BarLab sBarLab;
 
-    private List<Bar> mBars;
+    private List<BarIDs> mBars;
 
     public static BarLab get(Context context) {
         if(sBarLab == null) {
@@ -22,28 +22,34 @@ public class BarLab {
     }
 
     private BarLab(Context context) {
+
         mBars = new ArrayList<>();
 
-        for(int i = 0; i < 20; i++) {
-            Bar bar = new Bar();
-            bar.mBarID = i;
-            bar.mBarName =  "Bar #" + i;
-            bar.mBarAddress = "123 Main St.";
-            bar.mBarZipCode = 1234;
-            bar.mBarPhone = "123-234-1242";
-        }
+//        for(int i = 0; i < 20; i++) {
+//            Bar bar = new Bar();
+//            bar.mBarID = i;
+//            bar.mBarName =  "Bar #" + i;
+//            bar.mBarAddress = "123 Main St.";
+//            bar.mBarZipCode = 1234;
+//            bar.mBarPhone = "123-234-1242";
+//            mBars.add(bar);
+//        }
 
-        //mBars = BarsArrayList.getmBarList();
+        mBars = BarsArrayList.getmBarIDs();
     }
 
-    public List<Bar> getBars() { return mBars; }
+    public List<BarIDs> getBars() { return mBars; }
 
-    public Bar getBar(int barid) {
-        for (Bar bar : mBars) {
-            if (bar.mBarID == barid) {
-                return bar;
+    public BarIDs getBar(int barid) {
+        for (BarIDs barids : mBars) {
+            if (barids.mBarIDs == barid) {
+                return barids;
             }
         }
         return null;
+    }
+
+    public void removeList() {
+        mBars.clear();
     }
 }

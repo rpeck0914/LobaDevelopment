@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -14,16 +15,20 @@ import android.widget.TextView;
 
 import junit.framework.Test;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener{
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class MainActivity extends FragmentActivity implements View.OnClickListener, Communicator{
 
     //Private Variables For The Main Activity Layout
     private TextView mLoggedInName, mLogOutLink;
 
     //Creates A Variable For UserLocalStore To Sore The Users Data Locally On Device
     private UserLocalStore userLocalStore;
-    private BarIDs mBarIDs;
-    private CityStateSpinnerFragment mCityStateSpinnerFragment;
 
+    private Timer mTimer;
+    private TimerTask mTimerTask;
+    final Handler handler = new Handler();
 
     //// TODO: 10/15/2015 Get XML to the desired layout to match the concept
     @Override
@@ -105,7 +110,44 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
         }
     }
-//    @Override
+
+    @Override
+    public void respond(String data) {
+        FragmentManager manager = getSupportFragmentManager();
+        BarDetailsFragment f2 = (BarDetailsFragment) manager.findFragmentById(R.id.bottom_fragment_container);
+        f2.updateUI();
+        startTimer();
+    }
+
+    public void startTimer() {
+        mTimer = new Timer();
+        initializeTimerTask();
+        mTimer.schedule(mTimerTask, 1000);
+    }
+
+    public void stopTimerTask() {
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+    }
+
+    public void initializeTimerTask() {
+        mTimerTask = new TimerTask(){
+            public void run() {
+                handler.post(new Runnable(){
+                    public void run() {
+                        FragmentManager manager = getSupportFragmentManager();
+                        BarDetailsFragment f2 = (BarDetailsFragment) manager.findFragmentById(R.id.bottom_fragment_container);
+                        f2.updateUI();
+                        stopTimerTask();
+                    }
+                });
+            }
+        };
+    }
+
+    //    @Override
 //    public void onBackPressed() {
 //        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 //        dialogBuilder.setCancelable(false);

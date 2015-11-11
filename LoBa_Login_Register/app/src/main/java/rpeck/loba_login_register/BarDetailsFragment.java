@@ -2,6 +2,7 @@ package rpeck.loba_login_register;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,8 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +21,11 @@ public class BarDetailsFragment extends Fragment {
 
     private RecyclerView mBarRecyclerView;
     private BarAdapter mAdapter;
+    private Timer mTimer;
+    private TimerTask mTimerTask;
+    private int timerCounter;
+
+    final Handler handler = new Handler();
 
     CityStateSpinnerFragment mCityStateSpinnerFragment = new CityStateSpinnerFragment();
 
@@ -33,11 +40,8 @@ public class BarDetailsFragment extends Fragment {
 
         mBarRecyclerView = (RecyclerView) v.findViewById(R.id.bar_recycler_view);
         mBarRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-//        if(mCityStateSpinnerFragment.updateUIFlag) {
+        startTimer();
         updateUI();
-//            mCityStateSpinnerFragment.updateUIFlag = false;
-//        }
         return v;
     }
 
@@ -47,13 +51,42 @@ public class BarDetailsFragment extends Fragment {
         updateUI();
     }
 
-    private void updateUI() {
+    public void startTimer() {
+        mTimer = new Timer();
+        initializeTimerTask();
+        timerCounter = 0;
+        mTimer.schedule(mTimerTask, 3000, 1000);
+    }
+
+    public void stopTimerTask() {
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+    }
+
+    public void initializeTimerTask() {
+        mTimerTask = new TimerTask(){
+            public void run() {
+                handler.post(new Runnable(){
+                    public void run() {
+                        updateUI();
+                        timerCounter++;
+                        if(timerCounter > 4) {
+                            stopTimerTask();
+                        }
+                    }
+                });
+            }
+        };
+    }
+
+    public void updateUI() {
         BarLab barLab = BarLab.get(getActivity());
-        List<Bar> bars = barLab.getBars();
+        List<BarIDs> barids = barLab.getBars();
 
-        mAdapter = new BarAdapter(bars);
+        mAdapter = new BarAdapter(barids);
         mBarRecyclerView.setAdapter(mAdapter);
-
     }
 
     private class BarHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -61,7 +94,7 @@ public class BarDetailsFragment extends Fragment {
         private TextView mBarNameTextView;
         //private int mSelectedBarID;
 
-        private Bar mBar;
+        private BarIDs mBarIDs;
 
         public BarHolder(View itemView) {
             super(itemView);
@@ -70,28 +103,24 @@ public class BarDetailsFragment extends Fragment {
             mBarNameTextView = (TextView) itemView.findViewById(R.id.bar_name);
         }
 
-        public void bindBar(Bar bar) {
-            mBar = bar;
+        public void bindBar(BarIDs barIDs) {
+            mBarIDs = barIDs;
 
-            mBarNameTextView.setText(mBar.mBarName);
+            mBarNameTextView.setText(mBarIDs.mBarNames);
         }
 
         @Override
         public void onClick(View v) {
-            //mSelectedBarID = mBar.getName();
-        }
 
-//        public int getSelectedBarID() {
-//            return mSelectedBarID;
-//        }
+        }
     }
 
     private class BarAdapter extends RecyclerView.Adapter<BarHolder> {
 
-        private List<Bar> mBars;
+        private List<BarIDs> mBarIds;
 
-        public BarAdapter(List<Bar> bars) {
-            mBars = bars;
+        public BarAdapter(List<BarIDs> barID) {
+            mBarIds = barID;
         }
 
         @Override
@@ -104,13 +133,13 @@ public class BarDetailsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(BarHolder barHolder, int i) {
-            Bar bar = mBars.get(i);
-            barHolder.bindBar(bar);
+            BarIDs barid = mBarIds.get(i);
+            barHolder.bindBar(barid);
         }
 
         @Override
         public int getItemCount() {
-            return mBars.size();
+            return mBarIds.size();
         }
     }
 }

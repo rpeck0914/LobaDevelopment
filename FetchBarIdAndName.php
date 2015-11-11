@@ -1,8 +1,8 @@
 <?php
     $con=mysqli_connect("mysql10.000webhost.com","a4937391_loba","loba54dev","a4937391_loba");
 	
-	//$cityid = $_POST["cityid"];
-	$cityid = 1;
+	$cityid = $_POST["cityid"];
+	//$cityid = 1;
 	
 	$statement = mysqli_prepare($con, "SELECT * FROM BarDetails WHERE city_id = ?");
 	mysqli_stmt_bind_param($statement, "i", $cityid);

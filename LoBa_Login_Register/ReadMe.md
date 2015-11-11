@@ -39,3 +39,4 @@ http://000webhost.com
 		http://stackoverflow.com/questions/2257963/how-to-show-a-dialog-to-confirm-that-the-user-wishes-to-exit-an-android-activity
 		http://stackoverflow.com/questions/4732184/how-to-finish-an-android-application
 		http://stackoverflow.com/questions/3934331/android-how-to-encrypt-a-string
+		http://examples.javacodegeeks.com/android/core/activity/android-timertask-example/

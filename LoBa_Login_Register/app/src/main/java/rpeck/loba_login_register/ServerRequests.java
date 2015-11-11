@@ -74,11 +74,6 @@ public class ServerRequests {
         new FetchBarIDsDataAsyncTask(barIDs, getBarIDsCallback).execute();
     }
 
-    public void fetchBarsDataAsyncTask(Bar bar, GetBarsCallBack getBarsCallBack) {
-        progressDialog.show();
-        new FetchBarsDataAsyncTask(bar, getBarsCallBack).execute();
-    }
-
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void> {
         //Class That Takes The User's Data And Sends The Information Over To Be Stored In The Database
         User user;
@@ -344,11 +339,14 @@ public class ServerRequests {
     public class FetchBarIDsDataAsyncTask extends AsyncTask<Void, Void, BarIDs> {
         BarIDs mBarIDs;
         GetBarIDsCallback mGetBarIDsCallback;
-        private int[] barIDsArray;
+        private int barid;
+        private String barName;
+        BarsArrayList mBarsArrayList;
 
         public FetchBarIDsDataAsyncTask(BarIDs barIDs, GetBarIDsCallback getBarIDsCallback) {
             this.mBarIDs = barIDs;
             this.mGetBarIDsCallback = getBarIDsCallback;
+            mBarsArrayList = new BarsArrayList();
         }
 
         @Override
@@ -361,7 +359,7 @@ public class ServerRequests {
             HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
 
             HttpClient client = new DefaultHttpClient(httpRequestParams);
-            HttpPost post = new HttpPost(SERVER_ADDRESS + "FetchBarIDs.php");
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "FetchBarIdAndName.php");
 
             BarIDs returnedBarIDs = null;
 
@@ -371,19 +369,19 @@ public class ServerRequests {
 
                 HttpEntity entity = httpResponse.getEntity();
                 String result = EntityUtils.toString(entity);
-                JSONArray jArray = new JSONArray(URLDecoder.decode(result, "UTF-8"));
-                //JSONObject jObject = new JSONObject(URLDecoder.decode(result, "UTF-8"));
+                //JSONArray jArray = new JSONArray(URLDecoder.decode(result, "UTF-8"));
+                JSONObject jObject = new JSONObject(URLDecoder.decode(result, "UTF-8"));
 
-                barIDsArray = new int[jArray.length()];
-                //Iterator<String> keys = jArray.keys();
+                Iterator<String> keys = jObject.keys();
 
-                for (int i = 0; i < jArray.length(); i++) {
-                    //String key = keys.next();
-                    barIDsArray[i] = jArray.getInt(i);
+                for (int i = 0; i < jObject.length(); i++) {
+                    String key = keys.next();
+                    barid = Integer.parseInt(key);
+                    barName = jObject.getString(key);
+
+                    returnedBarIDs = new BarIDs(barid, barName);
+                    mBarsArrayList.addBarToList(returnedBarIDs);
                 }
-
-                returnedBarIDs = new BarIDs(jArray.length(), barIDsArray);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -395,64 +393,6 @@ public class ServerRequests {
             super.onPostExecute(returnedBarIDs);
             progressDialog.dismiss();
             mGetBarIDsCallback.done(returnedBarIDs);
-        }
-    }
-
-    public class FetchBarsDataAsyncTask extends AsyncTask<Void, Void, Bar> {
-        Bar mBar;
-        GetBarsCallBack mGetBarsCallBack;
-        BarsArrayList mBarsArrayList;
-
-        public FetchBarsDataAsyncTask(Bar bar, GetBarsCallBack getBarsCallBack) {
-            mBar = bar;
-            mGetBarsCallBack = getBarsCallBack;
-            //mBarsArrayList = new BarsArrayList();
-        }
-
-        @Override
-        protected Bar doInBackground(Void... params) {
-            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
-            dataToSend.add(new BasicNameValuePair("barid", mBar.mBarID + ""));
-
-            HttpParams httpRequestParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
-            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
-
-            HttpClient client = new DefaultHttpClient(httpRequestParams);
-            HttpPost post = new HttpPost(SERVER_ADDRESS + "FetchBarData.php");
-
-            Bar returnedBar = null;
-
-            try {
-                post.setEntity(new UrlEncodedFormEntity(dataToSend));
-                HttpResponse httpResponse = client.execute(post);
-
-                HttpEntity entity = httpResponse.getEntity();
-                String result = EntityUtils.toString(entity);
-                JSONObject jObject = new JSONObject(result);
-
-                if(jObject.length() != 0) {
-                    String barName  = jObject.getString("barname");
-                    String barAddress = jObject.getString("baraddress");
-                    int barZipCode = jObject.getInt("barzipcode");
-                    String barPhone = jObject.getString("phone");
-
-                    returnedBar = new Bar(mBar.mBarID, barName, barAddress, barZipCode, barPhone);
-
-                    mBarsArrayList = new BarsArrayList(returnedBar);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return returnedBar;
-        }
-
-        @Override
-        protected void onPostExecute(Bar returnedBar) {
-            super.onPostExecute(returnedBar);
-            progressDialog.dismiss();
-            mGetBarsCallBack.done(returnedBar);
         }
     }
 }
