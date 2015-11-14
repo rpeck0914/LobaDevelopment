@@ -74,6 +74,11 @@ public class ServerRequests {
         new FetchBarIDsDataAsyncTask(barIDs, getBarIDsCallback).execute();
     }
 
+    public void fetchBarDetailsDataAsyncTask(Bar bar, GetBarsCallBack getBarsCallBack) {
+        progressDialog.show();
+        new FetchBarDetailsDataAsyncTask(bar, getBarsCallBack).execute();
+    }
+
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void> {
         //Class That Takes The User's Data And Sends The Information Over To Be Stored In The Database
         User user;
@@ -87,7 +92,6 @@ public class ServerRequests {
         @Override
         protected Void doInBackground(Void... params) {
             //Creates An ArrayList To Store The User's Data To Be Sent Over To The Database
-            //// TODO: 10/15/2015 Add The CityID To The User's Information To Pull Bars In Main Activity
             ArrayList<NameValuePair> dataToSend = new ArrayList<>();
             dataToSend.add(new BasicNameValuePair("name", user.mName));
             dataToSend.add(new BasicNameValuePair("username", user.mUserName));
@@ -313,7 +317,6 @@ public class ServerRequests {
                     String key = keys.next();
                     citiesIDArray[i] = Integer.parseInt(key);
                     citiesArray[i] = jObject.getString(key);
-
                 }
 
                 //New Cities Class Is Created Off Of The Information Returning From The Database
@@ -393,6 +396,64 @@ public class ServerRequests {
             super.onPostExecute(returnedBarIDs);
             progressDialog.dismiss();
             mGetBarIDsCallback.done(returnedBarIDs);
+        }
+    }
+
+    public class FetchBarDetailsDataAsyncTask extends AsyncTask<Void, Void, Bar> {
+        Bar mBar;
+        GetBarsCallBack mGetBarsCallBack;
+        String mBarState;
+        String mBarCity;
+
+        public FetchBarDetailsDataAsyncTask(Bar bar, GetBarsCallBack getBarsCallBack) {
+            mBar = bar;
+            mGetBarsCallBack = getBarsCallBack;
+            mBarState = mBar.mBarState;
+            mBarCity = mBar.mBarCity;
+        }
+
+        @Override
+        protected Bar doInBackground(Void... params) {
+            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
+            dataToSend.add(new BasicNameValuePair("barid", mBar.mBarID + ""));
+
+            HttpParams httpRequestParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+
+            HttpClient client = new DefaultHttpClient(httpRequestParams);
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "FetchBarData.php");
+
+            Bar returnedBar = null;
+
+            try {
+                post.setEntity(new UrlEncodedFormEntity(dataToSend));
+                HttpResponse httpResponse = client.execute(post);
+
+                HttpEntity entity = httpResponse.getEntity();
+                String result = EntityUtils.toString(entity);
+                JSONObject jObject = new JSONObject(URLDecoder.decode(result, "UTF-8"));
+
+                if (jObject.length() != 0) {
+                    String name = jObject.getString("name");
+                    String address = jObject.getString("address");
+                    String zipcode = jObject.getString("zipcode");
+                    String phone = jObject.getString("phone");
+
+                    returnedBar = new Bar(mBar.mBarID, name, address, mBarState, mBarCity, zipcode, phone);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return returnedBar;
+        }
+
+        @Override
+        protected void onPostExecute(Bar returnedBar) {
+            super.onPostExecute(returnedBar);
+            progressDialog.dismiss();
+            mGetBarsCallBack.done(returnedBar);
         }
     }
 }

@@ -6,5 +6,11 @@
     <color name="bar_detail_background">#757575</color>
     <color name="bar_detail_text_color">#fdbe1f</color>
 
-    <color name="main_menu_spinner_background">#d4aa78</color>
+    <color name="single_bar_text_color">#757575</color>
+    <color name="single_bar_details_background_color">#7efdbe1f</color>
+
+
+
+    <color name="main_menu_spinner_background">#82eae6e0</color>
+
 </resources>

@@ -6,7 +6,7 @@ package rpeck.loba_login_register;
 public class BarIDs {
 
     int cityid;
-    public int mBarIDs;
+    public int mBarID;
     public String mBarNames;
 
     public BarIDs(int cityid){
@@ -14,7 +14,7 @@ public class BarIDs {
     }
 
     public BarIDs(int barids, String barNames) {
-        this.mBarIDs = barids;
+        this.mBarID = barids;
         this.mBarNames = barNames;
     }
 }

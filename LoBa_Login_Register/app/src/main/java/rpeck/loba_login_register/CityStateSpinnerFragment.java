@@ -103,7 +103,6 @@ public class CityStateSpinnerFragment extends Fragment {
 
     //loadStateSpinner Method To Load The State Spinner With The States Passed Over From The Database
     private void loadStateSpinner(final States statesToLoad) {
-
         //Sends The States And Their ID's Over To Be Sorted
         mStateArraySort = new ArraySort(statesToLoad.states, statesToLoad.stateID);
 
@@ -117,6 +116,8 @@ public class CityStateSpinnerFragment extends Fragment {
             public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
                 //Override Method For Selected A Different State In The State Spinner
 
+                User user = mUserLocalStore.getLoggedInUser();
+
                 //Finds The Selected State's ID To Fetch The Cities Within That State
                 int selectedIndex;
                 String selectedState = mStateSpinner.getSelectedItem().toString();
@@ -127,6 +128,10 @@ public class CityStateSpinnerFragment extends Fragment {
 
                         //Creates A New City With The StateID
                         Cities cities = new Cities(mStateArraySort.getIDArray()[selectedIndex]);
+
+                        if(user != null){
+                          user.mState = selectedState;
+                        }
                         //Calls The pullCites Method And Sends The Cities Object Over
                         pullCities(cities);
                     }
@@ -156,6 +161,8 @@ public class CityStateSpinnerFragment extends Fragment {
 
             @Override
             public void onItemSelected(AdapterView<?> aro0, View arg1, int arg2, long arg3) {
+                User user = mUserLocalStore.getLoggedInUser();
+
                 int selectedIndex;
                 String selectedCity = mCitySpinner.getSelectedItem().toString();
                 for (int i = 0; i < mCityArraySort.getNameArray().length; i++) {
@@ -167,6 +174,9 @@ public class CityStateSpinnerFragment extends Fragment {
                         barLab.removeList();
                         pullBarIDs();
                         comm.respond("updateUI");
+                        if(user != null) {
+                            user.mCity = selectedCity;
+                        }
                     }
                 }
             }
@@ -216,10 +226,11 @@ public class CityStateSpinnerFragment extends Fragment {
             @Override
             public void done(BarIDs returnedBarIDs) {
                 if (returnedBarIDs == null) {
-                    String errorMessage = "Error Fetching Bar Data";
+                    String errorMessage = "No Bars Exist For This City";
                     showErrorMessage(errorMessage);
                 } else {
                     mBarID = returnedBarIDs;
+                    comm.respond("updateUI");
                 }
             }
         });

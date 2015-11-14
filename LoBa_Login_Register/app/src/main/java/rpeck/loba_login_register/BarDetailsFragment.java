@@ -1,6 +1,7 @@
 package rpeck.loba_login_register;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -21,17 +22,8 @@ public class BarDetailsFragment extends Fragment {
 
     private RecyclerView mBarRecyclerView;
     private BarAdapter mAdapter;
-    private Timer mTimer;
-    private TimerTask mTimerTask;
-    private int timerCounter;
 
-    final Handler handler = new Handler();
-
-    CityStateSpinnerFragment mCityStateSpinnerFragment = new CityStateSpinnerFragment();
-
-    public BarDetailsFragment() {
-        // Required empty public constructor
-    }
+    public BarDetailsFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,7 +32,6 @@ public class BarDetailsFragment extends Fragment {
 
         mBarRecyclerView = (RecyclerView) v.findViewById(R.id.bar_recycler_view);
         mBarRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        startTimer();
         updateUI();
         return v;
     }
@@ -49,36 +40,6 @@ public class BarDetailsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateUI();
-    }
-
-    public void startTimer() {
-        mTimer = new Timer();
-        initializeTimerTask();
-        timerCounter = 0;
-        mTimer.schedule(mTimerTask, 3000, 1000);
-    }
-
-    public void stopTimerTask() {
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer = null;
-        }
-    }
-
-    public void initializeTimerTask() {
-        mTimerTask = new TimerTask(){
-            public void run() {
-                handler.post(new Runnable(){
-                    public void run() {
-                        updateUI();
-                        timerCounter++;
-                        if(timerCounter > 4) {
-                            stopTimerTask();
-                        }
-                    }
-                });
-            }
-        };
     }
 
     public void updateUI() {
@@ -111,7 +72,8 @@ public class BarDetailsFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-
+            Intent intent = SingleBarDetailsActivity.newIntent(getActivity(), mBarIDs.mBarID + "");
+            startActivity(intent);
         }
     }
 

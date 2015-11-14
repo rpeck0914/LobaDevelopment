@@ -1,8 +1,5 @@
 package rpeck.loba_login_register;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,13 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-
-import junit.framework.Test;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener, Communicator{
 
@@ -26,8 +17,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     //Creates A Variable For UserLocalStore To Sore The Users Data Locally On Device
     private UserLocalStore userLocalStore;
 
-    private Timer mTimer;
-    private TimerTask mTimerTask;
     final Handler handler = new Handler();
 
     //// TODO: 10/15/2015 Get XML to the desired layout to match the concept
@@ -50,7 +39,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         if (fragment2 == null){
-            fragment2 = new BarDetailsFragment();
+            fragment2 = new BarDetailsFragment() ;
             fm2.beginTransaction()
                     .add(R.id.bottom_fragment_container, fragment2)
                     .commit();
@@ -116,35 +105,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         FragmentManager manager = getSupportFragmentManager();
         BarDetailsFragment f2 = (BarDetailsFragment) manager.findFragmentById(R.id.bottom_fragment_container);
         f2.updateUI();
-        startTimer();
-    }
-
-    public void startTimer() {
-        mTimer = new Timer();
-        initializeTimerTask();
-        mTimer.schedule(mTimerTask, 1000);
-    }
-
-    public void stopTimerTask() {
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer = null;
-        }
-    }
-
-    public void initializeTimerTask() {
-        mTimerTask = new TimerTask(){
-            public void run() {
-                handler.post(new Runnable(){
-                    public void run() {
-                        FragmentManager manager = getSupportFragmentManager();
-                        BarDetailsFragment f2 = (BarDetailsFragment) manager.findFragmentById(R.id.bottom_fragment_container);
-                        f2.updateUI();
-                        stopTimerTask();
-                    }
-                });
-            }
-        };
     }
 
     //    @Override

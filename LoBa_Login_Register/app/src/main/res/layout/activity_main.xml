@@ -48,7 +48,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/top_fragment_container">
+            android:id="@+id/top_fragment_container"
+            android:paddingBottom="20dp">
         </FrameLayout>
 
         <FrameLayout

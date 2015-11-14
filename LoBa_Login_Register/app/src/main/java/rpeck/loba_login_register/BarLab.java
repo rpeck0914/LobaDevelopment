@@ -25,16 +25,6 @@ public class BarLab {
 
         mBars = new ArrayList<>();
 
-//        for(int i = 0; i < 20; i++) {
-//            Bar bar = new Bar();
-//            bar.mBarID = i;
-//            bar.mBarName =  "Bar #" + i;
-//            bar.mBarAddress = "123 Main St.";
-//            bar.mBarZipCode = 1234;
-//            bar.mBarPhone = "123-234-1242";
-//            mBars.add(bar);
-//        }
-
         mBars = BarsArrayList.getmBarIDs();
     }
 
@@ -42,7 +32,7 @@ public class BarLab {
 
     public BarIDs getBar(int barid) {
         for (BarIDs barids : mBars) {
-            if (barids.mBarIDs == barid) {
+            if (barids.mBarID == barid) {
                 return barids;
             }
         }

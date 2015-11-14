@@ -41,3 +41,4 @@ http://000webhost.com
 		http://stackoverflow.com/questions/3934331/android-how-to-encrypt-a-string
 		http://examples.javacodegeeks.com/android/core/activity/android-timertask-example/
 		https://www.youtube.com/watch?v=fvG20PAUdcU
+		http://stackoverflow.com/questions/19471005/sorting-an-arraylist-of-objects-alphabetically
