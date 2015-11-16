@@ -42,3 +42,5 @@ http://000webhost.com
 		http://examples.javacodegeeks.com/android/core/activity/android-timertask-example/
 		https://www.youtube.com/watch?v=fvG20PAUdcU
 		http://stackoverflow.com/questions/19471005/sorting-an-arraylist-of-objects-alphabetically
+		https://developers.google.com/maps/documentation/android-api/intents?hl=en
+		http://stackoverflow.com/questions/11699819/how-do-i-get-the-dialer-to-open-with-phone-number-displayed

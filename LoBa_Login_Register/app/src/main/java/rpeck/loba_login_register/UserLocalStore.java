@@ -59,4 +59,26 @@ public class UserLocalStore {
         User user = new User(name, username, password, city, state, cityid);
         return user;
     }
+
+    public void selectedCityAndState(String name, String type) {
+        SharedPreferences.Editor userLocalDatabaseEditor = userLocalDatabase.edit();
+        if(type == "State") {
+            userLocalDatabaseEditor.putString("selectedState", name);
+        } else if(type == "City") {
+            userLocalDatabaseEditor.putString("selectedCity", name);
+        }
+        userLocalDatabaseEditor.commit();
+    }
+
+    public String getSelectedCityAndState(String type) {
+
+        String name = null;
+
+        if(type == "selectedState") {
+            name = userLocalDatabase.getString(type, "");
+        } else if (type == "selectedCity") {
+            name = userLocalDatabase.getString(type, "");
+        }
+        return name;
+    }
 }

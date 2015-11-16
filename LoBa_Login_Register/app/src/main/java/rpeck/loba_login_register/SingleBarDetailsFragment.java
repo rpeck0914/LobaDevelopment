@@ -2,6 +2,8 @@ package rpeck.loba_login_register;
 
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
 
     private Bar mBar;
     private UserLocalStore mUserLocalStore;
+    //private StateAbbreviations mStateAbbreviations;
 
     public SingleBarDetailsFragment() { }
 
@@ -38,13 +41,16 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
 
         mMapsImage.setOnClickListener(this);
         mPhoneImage.setOnClickListener(this);
+        mBarAddress.setOnClickListener(this);
+        mBarPhone.setOnClickListener(this);
 
         int barId = SingleBarDetailsActivity.mbarId;
 
         mUserLocalStore = new UserLocalStore(getActivity());
-        User user = mUserLocalStore.getLoggedInUser();
 
-        mBar = new Bar(barId, user.mState, user.mCity);
+        String state = new StateAbbreviations(mUserLocalStore.getSelectedCityAndState("selectedState")).getStateAbbrev();
+
+        mBar = new Bar(barId, state, mUserLocalStore.getSelectedCityAndState("selectedCity") );
 
         pullBarInformation(mBar);
 
@@ -70,13 +76,19 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.map_image:
-                //TODO Write In Intent To Call Google Maps With The Address
-                Toast.makeText(getActivity(), "HAHA you thought google maps was going to open", Toast.LENGTH_SHORT).show();
+                googleMapsIntentCall();
                 break;
 
             case R.id.phone_image:
-                //TODO Write In Intent To Call The Phone App With The Supplied Number
-                Toast.makeText(getActivity(), "Are you sure you really want to call this bar??", Toast.LENGTH_SHORT).show();
+                phoneIntentCall();
+                break;
+
+            case R.id.single_bar_address:
+                googleMapsIntentCall();
+                break;
+
+            case R.id.single_bar_phone:
+                phoneIntentCall();
                 break;
         }
     }
@@ -84,8 +96,8 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
     private void fillBarDataToLayout(Bar bar) {
         mBarname.setText(bar.mBarName);
         mBarAddress.setText(bar.mBarAddress);
-        mBarState.setText(bar.mBarState);
-        mBarCity.setText(bar.mBarCity);
+        mBarState.setText(bar.mBarState + " ");
+        mBarCity.setText(bar.mBarCity + ", ");
         mBarZipCode.setText(bar.mBarZipCode);
         mBarPhone.setText(bar.mBarPhone);
     }
@@ -95,5 +107,19 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
         dialogBuilder.setMessage(errorMessage);
         dialogBuilder.setPositiveButton("OK", null);
         dialogBuilder.show();
+    }
+
+    private void googleMapsIntentCall() {
+        String addressString = (mBarAddress.getText().toString() + " " + mBarCity.getText().toString() + mBarState.getText().toString() + mBarZipCode.getText().toString());
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + addressString);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+    }
+
+    private void phoneIntentCall() {
+        Intent phoneIntent = new Intent(Intent.ACTION_DIAL);
+        phoneIntent.setData(Uri.parse("tel:" + mBarPhone.getText().toString()));
+        startActivity(phoneIntent);
     }
 }

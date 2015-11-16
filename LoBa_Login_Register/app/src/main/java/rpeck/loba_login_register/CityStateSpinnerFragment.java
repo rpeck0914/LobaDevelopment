@@ -129,9 +129,8 @@ public class CityStateSpinnerFragment extends Fragment {
                         //Creates A New City With The StateID
                         Cities cities = new Cities(mStateArraySort.getIDArray()[selectedIndex]);
 
-                        if(user != null){
-                          user.mState = selectedState;
-                        }
+                        mUserLocalStore.selectedCityAndState(selectedState, "State");
+
                         //Calls The pullCites Method And Sends The Cities Object Over
                         pullCities(cities);
                     }
@@ -174,9 +173,7 @@ public class CityStateSpinnerFragment extends Fragment {
                         barLab.removeList();
                         pullBarIDs();
                         comm.respond("updateUI");
-                        if(user != null) {
-                            user.mCity = selectedCity;
-                        }
+                        mUserLocalStore.selectedCityAndState(selectedCity, "City");
                     }
                 }
             }
@@ -242,5 +239,13 @@ public class CityStateSpinnerFragment extends Fragment {
         dialogBuilder.setMessage(errorMessage);
         dialogBuilder.setPositiveButton("OK", null);
         dialogBuilder.show();
+    }
+
+    public Spinner getStateSpinner() {
+        return mStateSpinner;
+    }
+
+    public Spinner getCitySpinner() {
+        return mCitySpinner;
     }
 }

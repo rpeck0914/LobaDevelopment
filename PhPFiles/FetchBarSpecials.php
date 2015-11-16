@@ -1,29 +1,34 @@
 <?php
     $con=mysqli_connect("mysql10.000webhost.com","a4937391_loba","loba54dev","a4937391_loba");
 	
-	$barid = $_POST["barid"];
-	//$barid = 1;
+	//$barid = $_POST["barid"];
+	//$dayofweek = $_POST["dayofweek"];
 	
-	$statement = mysqli_prepare($con, "SELECT * FROM BarSpecials WHERE bar_id = ?");
-	mysqli_stmt_bind_param($statement, "i", $barid);
+	$barid = "1";
+	$dayofweek = "Monday";
+	
+	$statement = mysqli_prepare($con, "SELECT * FROM BarSpecials WHERE bar_id = ? AND dayofweek = ?");
+	mysqli_stmt_bind_param($statement, "ss", $barid, $dayofweek);
 	mysqli_stmt_execute($statement);
 	
 	mysqli_stmt_store_result($statement);
-	mysqli_stmt_bind_result($statement, $barid, $fri, $sat, $sun, $mon, $tue, $wed, $thur);
+	mysqli_stmt_bind_result($statement, $barId, $dayofweek, $special, $addedby, $dateforspecial);
 	
 	$barspecials = array();
+	$barspecialsaddedby = array();
+	$dateforspecials = array();
+	$counter = 0;
 	
 	while(mysqli_stmt_fetch($statement)) {
-		$barspecials["fri"] = $fri;
-		$barspecials["sat"] = $sat;
-		$barspecials["sun"] = $sun;
-		$barspecials["mon"] = $mon;
-		$barspecials["tue"] = $tue;
-		$barspecials["wed"] = $wed;
-		$barspecials["thur"] = $thur;
+		$barspecials[$counter] = $special;
+		$barspecialsaddedby[$counter] = $addedby;
+		$dateforspecials[$counter] = $dateforspecial;
+		$counter = $counter + 1;
 	}
 	
 	echo json_encode($barspecials);
+	echo json_encode($barspecialsaddedby);
+	echo json_encode($dateforspecials);
 	
 	mysqli_close($con);
 ?>
