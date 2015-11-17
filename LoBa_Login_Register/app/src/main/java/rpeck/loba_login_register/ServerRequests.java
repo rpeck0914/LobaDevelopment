@@ -79,6 +79,11 @@ public class ServerRequests {
         new FetchBarDetailsDataAsyncTask(bar, getBarsCallBack).execute();
     }
 
+    public void fetchBarSpecialsDataAsyncTask(DayOfWeek dayofweek, GetBarSpecialsCallback getBarSpecialsCallback) {
+        progressDialog.show();
+        new FetchBarSpecialsDataAsyncTask(dayofweek, getBarSpecialsCallback).execute();
+    }
+
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void> {
         //Class That Takes The User's Data And Sends The Information Over To Be Stored In The Database
         User user;
@@ -372,7 +377,6 @@ public class ServerRequests {
 
                 HttpEntity entity = httpResponse.getEntity();
                 String result = EntityUtils.toString(entity);
-                //JSONArray jArray = new JSONArray(URLDecoder.decode(result, "UTF-8"));
                 JSONObject jObject = new JSONObject(URLDecoder.decode(result, "UTF-8"));
 
                 Iterator<String> keys = jObject.keys();
@@ -454,6 +458,92 @@ public class ServerRequests {
             super.onPostExecute(returnedBar);
             progressDialog.dismiss();
             mGetBarsCallBack.done(returnedBar);
+        }
+    }
+
+    public class FetchBarSpecialsDataAsyncTask extends AsyncTask<Void, Void, DayOfWeek> {
+        DayOfWeek mDayOfWeek;
+        BarSpecialsArrayList mBarSpecialsArrayList;
+        Specials mSpecials;
+        GetBarSpecialsCallback mGetBarSpecialsCallback;
+        boolean dayExists = false;
+
+        public FetchBarSpecialsDataAsyncTask(DayOfWeek dayOfWeek, GetBarSpecialsCallback getBarSpecialsCallback) {
+            mDayOfWeek = dayOfWeek;
+            mGetBarSpecialsCallback = getBarSpecialsCallback;
+        }
+
+        @Override
+        protected DayOfWeek doInBackground(Void... params) {
+            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
+            dataToSend.add(new BasicNameValuePair("barid", mDayOfWeek.getBarId() + ""));
+
+            HttpParams httpRequestParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+            HttpConnectionParams.setSoTimeout(httpRequestParams, CONNECTION_TIMEOUT);
+
+            HttpClient client = new DefaultHttpClient(httpRequestParams);
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "FetchBarSpecials.php");
+
+            try {
+                post.setEntity(new UrlEncodedFormEntity(dataToSend));
+                HttpResponse httpResponse = client.execute(post);
+
+                HttpEntity entity = httpResponse.getEntity();
+                String result = EntityUtils.toString(entity);
+                JSONObject jObject = new JSONObject(URLDecoder.decode(result, "UTF-8"));
+
+                Iterator iterator = jObject.keys();
+
+                while (iterator.hasNext()) {
+
+                    String key = (String) iterator.next();
+
+                    JSONObject record = jObject.getJSONObject(key);
+
+                    String dayofweek = record.getString("dayofweek");
+                    String special = record.getString("special");
+                    String addedby = record.getString("addedby");
+                    String dateforspecial = record.getString("dateforspecial");
+
+                    if(mBarSpecialsArrayList != null) {
+                        for (DayOfWeek dayOfWeek : mBarSpecialsArrayList.getmDaysOfWeek()) {
+                            if(dayOfWeek.getDayOfWeekString().equals(dayofweek)) {
+                                mSpecials = new Specials(special, addedby);
+                                mBarSpecialsArrayList.addSpecialToExistingDay(dayOfWeek, mSpecials);
+                                dayExists = true;
+                                break;
+                            }
+                        }
+                        if(dayExists == false) {
+                            mSpecials = new Specials(special, addedby);
+                            mDayOfWeek = new DayOfWeek(dayofweek, dateforspecial);
+                            mDayOfWeek.addSpecials(mSpecials);
+                            mBarSpecialsArrayList.addDayToWeek(mDayOfWeek);
+                        }
+                        dayExists = false;
+                    } else {
+                        mBarSpecialsArrayList = new BarSpecialsArrayList();
+                        mSpecials = new Specials(special, addedby);
+                        mDayOfWeek = new DayOfWeek(dayofweek, dateforspecial);
+                        mDayOfWeek.addSpecials(mSpecials);
+                        mBarSpecialsArrayList.addDayToWeek(mDayOfWeek);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                mDayOfWeek = null;
+            }
+
+            return mDayOfWeek;
+        }
+
+        @Override
+        protected void onPostExecute(DayOfWeek returnedDayOfWeek) {
+            super.onPostExecute(returnedDayOfWeek);
+            progressDialog.dismiss();
+            mGetBarSpecialsCallback.done(returnedDayOfWeek);
         }
     }
 }

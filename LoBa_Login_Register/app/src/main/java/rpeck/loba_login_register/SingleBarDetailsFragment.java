@@ -67,7 +67,19 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
                     showErrorMessage(errorMessage);
                 } else {
                     fillBarDataToLayout(returnedBar);
+                    pullBarSpecials(returnedBar);
                 }
+            }
+        });
+    }
+
+    private void pullBarSpecials(Bar bar) {
+        DayOfWeek dayOfWeek = new DayOfWeek(bar.mBarID);
+        ServerRequests serverRequests = new ServerRequests(getActivity());
+        serverRequests.fetchBarSpecialsDataAsyncTask(dayOfWeek, new GetBarSpecialsCallback() {
+            @Override
+            public void done(DayOfWeek returnedDayOfWeek) {
+
             }
         });
     }
