@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingTop="30dp"
+              android:paddingTop="10dp"
               android:paddingLeft="40dp"
               android:paddingRight="40dp"
               android:background="@color/single_bar_details_background_color">
@@ -17,7 +17,6 @@
             android:id="@+id/day_of_the_week_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Saturday"
             android:textSize="25dp"
             android:textStyle="bold"
             android:layout_weight="1"/>
@@ -26,7 +25,6 @@
             android:id="@+id/month_and_date_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="11/13"
             android:textSize="20dp"
             android:layout_weight="1"
             android:layout_marginLeft="-40dp"/>
@@ -39,7 +37,6 @@
         android:id="@+id/special_slot_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="$2 Domestic Pints"
         android:layout_marginTop="10dp"
         android:textSize="25dp"
         android:textStyle="bold"
@@ -50,7 +47,6 @@
         android:id="@+id/special_slot_1_added_by"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="added by rpeck"
         android:gravity="right"
         android:layout_weight="1"/>
     </LinearLayout>
@@ -63,7 +59,6 @@
             android:id="@+id/special_slot_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="$2 Domestic Pints"
             android:layout_marginTop="10dp"
             android:textSize="25dp"
             android:textStyle="bold"
@@ -74,7 +69,6 @@
             android:id="@+id/special_slot_2_added_by"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="added by rpeck"
             android:gravity="right"
             android:layout_weight="1"/>
     </LinearLayout>
@@ -87,7 +81,6 @@
             android:id="@+id/special_slot_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="$2 Domestic Pints"
             android:layout_marginTop="10dp"
             android:textSize="25dp"
             android:textStyle="bold"
@@ -98,7 +91,6 @@
             android:id="@+id/special_slot_3_added_by"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="added by rpeck"
             android:gravity="right"
             android:layout_weight="1"/>
     </LinearLayout>

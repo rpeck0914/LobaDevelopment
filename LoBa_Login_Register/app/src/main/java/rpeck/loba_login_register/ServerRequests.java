@@ -515,20 +515,16 @@ public class ServerRequests {
                                 break;
                             }
                         }
-                        if(dayExists == false) {
-                            mSpecials = new Specials(special, addedby);
-                            mDayOfWeek = new DayOfWeek(dayofweek, dateforspecial);
-                            mDayOfWeek.addSpecials(mSpecials);
-                            mBarSpecialsArrayList.addDayToWeek(mDayOfWeek);
-                        }
-                        dayExists = false;
                     } else {
                         mBarSpecialsArrayList = new BarSpecialsArrayList();
+                    }
+                    if(dayExists == false) {
                         mSpecials = new Specials(special, addedby);
                         mDayOfWeek = new DayOfWeek(dayofweek, dateforspecial);
                         mDayOfWeek.addSpecials(mSpecials);
                         mBarSpecialsArrayList.addDayToWeek(mDayOfWeek);
                     }
+                    dayExists = false;
                 }
 
             } catch (Exception e) {

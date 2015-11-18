@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SingleBarDetailsFragment extends Fragment implements View.OnClickListener {
 
@@ -20,7 +19,7 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
 
     private Bar mBar;
     private UserLocalStore mUserLocalStore;
-    //private StateAbbreviations mStateAbbreviations;
+    private LoadBarSpecialsCommunicator loadCommunicator;
 
     public SingleBarDetailsFragment() { }
 
@@ -54,6 +53,8 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
 
         pullBarInformation(mBar);
 
+        loadCommunicator = (LoadBarSpecialsCommunicator) getActivity();
+
         return v;
     }
 
@@ -65,9 +66,11 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
                 if(returnedBar == null) {
                     String errorMessage = "Error Collecting Bar Details";
                     showErrorMessage(errorMessage);
+
                 } else {
                     fillBarDataToLayout(returnedBar);
                     pullBarSpecials(returnedBar);
+
                 }
             }
         });
@@ -79,7 +82,11 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
         serverRequests.fetchBarSpecialsDataAsyncTask(dayOfWeek, new GetBarSpecialsCallback() {
             @Override
             public void done(DayOfWeek returnedDayOfWeek) {
-
+                if (returnedDayOfWeek == null) {
+                    loadCommunicator.loadViewPager("ErrorLoadingSpecials");
+                } else {
+                    loadCommunicator.loadViewPager("LoadBarSpecials");
+                }
             }
         });
     }
