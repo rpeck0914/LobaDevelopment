@@ -45,3 +45,8 @@ http://000webhost.com
 		https://developers.google.com/maps/documentation/android-api/intents?hl=en
 		http://stackoverflow.com/questions/11699819/how-do-i-get-the-dialer-to-open-with-phone-number-displayed
 		http://stackoverflow.com/questions/20321212/get-json-array-keys-in-android
+		http://stackoverflow.com/questions/25223374/set-gravity-for-linearlayout-programmatically
+		http://stackoverflow.com/questions/7919173/android-set-textview-textstyle-programmatically
+		http://stackoverflow.com/questions/6998938/textview-setting-the-text-size-programmatically-doesnt-seem-to-work
+		http://stackoverflow.com/questions/4814124/how-to-change-margin-of-textview
+		http://stackoverflow.com/questions/3204852/android-add-a-textview-to-linear-layout-programmatically
