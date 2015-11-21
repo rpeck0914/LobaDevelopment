@@ -22,6 +22,12 @@ public class DayOfWeek {
         mDate = date;
     }
 
+    public DayOfWeek(String day, String date, String id) {
+        mDayOfWeekString = day;
+        mDate = date;
+        mBarId = Integer.parseInt(id);
+    }
+
     public void addSpecials(Specials specials) {
         mSpecials.add(specials);
     }

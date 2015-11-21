@@ -25,13 +25,11 @@ public class BarSpecialsFragment extends Fragment {
 
     private TextView mDayOfTheWeek;
     private TextView mDate;
-    private TextView mSpecialDetail;
-    private TextView mAddedByTag;
     private View mLinearLayoutHolder;
 
-    public static BarSpecialsFragment newInstance(String dayofweek) {
+    public static BarSpecialsFragment newInstance(String date) {
         Bundle args = new Bundle();
-        args.putString(ARG_BAR_SPECIAL_DAY, dayofweek);
+        args.putString(ARG_BAR_SPECIAL_DAY, date);
         BarSpecialsFragment fragment = new BarSpecialsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -41,8 +39,8 @@ public class BarSpecialsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String dayOfWeek = getArguments().getString(ARG_BAR_SPECIAL_DAY);
-        mDayOfWeek = SpecialsLab.get(getActivity()).getSpecialDay(dayOfWeek);
+        String date = getArguments().getString(ARG_BAR_SPECIAL_DAY);
+        mDayOfWeek = SpecialsLab.get(getActivity()).getSpecialDay(date);
     }
 
     @Nullable
@@ -58,44 +56,35 @@ public class BarSpecialsFragment extends Fragment {
         mDate = (TextView) v.findViewById(R.id.month_and_date_title);
         mDate.setText(mDayOfWeek.getDate());
 
-//        mSpecialDetail = (TextView) v.findViewById(R.id.special_slot_1);
-//        mAddedByTag = (TextView) v.findViewById(R.id.special_slot_1_added_by);
-
         List<Specials> mSpecials = mDayOfWeek.getSpecials();
 
         for (int i = 0; i < mDayOfWeek.getSpecials().size(); i++){
 
             Specials specials = mSpecials.get(i);
             String details = specials.getSpecial();
-            String addedby = specials.getAddedBy();
-//            mSpecialDetail.setText(details);
-//            mAddedByTag.setText(addedby);
+            String addedBy = specials.getAddedBy();
 
-            //Creates A New Text View To Hold The Special Details
             TextView detailsHolder = new TextView(getActivity());
             detailsHolder.setId(i);
             detailsHolder.setText(details);
             detailsHolder.setTextSize(20);
             detailsHolder.setTypeface(Typeface.DEFAULT_BOLD);
             detailsHolder.setGravity(Gravity.RIGHT);
+            detailsHolder.setTextColor(getResources().getColor(R.color.single_bar_text_color));
             LinearLayout.LayoutParams detailsHolderParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             detailsHolderParams.setMargins(0,10,0,0);
             ((LinearLayout) mLinearLayoutHolder).addView(detailsHolder);
 
             TextView addedByHolder = new TextView(getActivity());
             addedByHolder.setId(i);
-            addedByHolder.setText(addedby);
+            addedByHolder.setText(addedBy);
             addedByHolder.setTextSize(14);
             addedByHolder.setGravity(Gravity.RIGHT);
+            addedByHolder.setTextColor(getResources().getColor(R.color.single_bar_text_color));
             LinearLayout.LayoutParams addedByHolderParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             addedByHolderParams.setMargins(0,0,0,10);
             ((LinearLayout) mLinearLayoutHolder). addView(addedByHolder);
         }
-
-//        mSpecialDetail.setText("$2 Shots");
-//        mAddedByTag.setText("rpeck");
-
-
         return v;
     }
 }

@@ -36,6 +36,10 @@
             android:name=".SingleBarDetailsActivity"
             android:label="@string/title_activity_single_bar_details" >
         </activity>
+        <activity
+            android:name=".AddBarSpecial"
+            android:label="@string/title_activity_add_bar_special" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,9 +1,9 @@
 <?php
     $con=mysqli_connect("mysql10.000webhost.com","a4937391_loba","loba54dev","a4937391_loba");
 	
-	//$barid = $_POST["barid"];
+	$barid = $_POST["barid"];
 	
-	$barid = "1";
+	//$barid = "1";
 	
 	$statement = mysqli_prepare($con, "SELECT * FROM BarSpecials WHERE bar_id = ?");
 	mysqli_stmt_bind_param($statement, "s", $barid);

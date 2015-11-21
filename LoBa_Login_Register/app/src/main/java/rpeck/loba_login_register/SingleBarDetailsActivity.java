@@ -15,16 +15,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class SingleBarDetailsActivity extends FragmentActivity implements View.OnClickListener, LoadBarSpecialsCommunicator {
 
-    private TextView mLoggedinName, mAddSpecial;
+    private TextView mBackButton, mAddSpecial;
     public static int mbarId;
+    private boolean backBoolean = false;
 
     private ViewPager mViewPager;
     private List<DayOfWeek> mDayOfWeeks;
-    private BarSpecialsArrayList mBarSpecialsArrayList;
 
     private UserLocalStore mUserLocalStore;
 
@@ -55,26 +57,41 @@ public class SingleBarDetailsActivity extends FragmentActivity implements View.O
         mViewPager = (ViewPager) findViewById(R.id.activity_bar_special_pager_view_pager);
         mDayOfWeeks = SpecialsLab.get(this).getDayOfWeeks();
 
-        mLoggedinName = (TextView) findViewById(R.id.logged_in_name);
+        mBackButton = (TextView) findViewById(R.id.back_button);
         mAddSpecial = (TextView) findViewById(R.id.add_bar_special);
 
         mUserLocalStore = new UserLocalStore(this);
 
         mAddSpecial.setOnClickListener(this);
+        mBackButton.setOnClickListener(this);
+    }
 
-        displayUserDetails();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(backBoolean) {
+            clearSpecialList();
+            FragmentManager manager = getSupportFragmentManager();
+            SingleBarDetailsFragment f1 = (SingleBarDetailsFragment) manager.findFragmentById(R.id.single_bar_details_top_fragment_container);
+            f1.pullBarSpecials(f1.getBar());
+            backBoolean = false;
+        }
+        //TODO Get THIS TO UPDATE THE SPECIALS!!!
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        clearSpecialList();
     }
 
     private void LoadBarSpecials() {
-        //SpecialsLab specialsLab = SpecialsLab.get(this);
-
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
                 DayOfWeek dayOfWeek = mDayOfWeeks.get(position);
-                return BarSpecialsFragment.newInstance(dayOfWeek.getDayOfWeekString());
+                return BarSpecialsFragment.newInstance(dayOfWeek.getDate());
             }
 
             @Override
@@ -88,8 +105,13 @@ public class SingleBarDetailsActivity extends FragmentActivity implements View.O
             }
         });
 
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
         for(int i = 0; i < mDayOfWeeks.size(); i++) {
-            if(mDayOfWeeks.get(i).getDayOfWeekString().equals("Friday")){
+            if(mDayOfWeeks.get(i).getDayOfWeekString().equals(setDayOfTheWeekString(day))){
                 mViewPager.setCurrentItem(i);
                 break;
             }
@@ -100,14 +122,14 @@ public class SingleBarDetailsActivity extends FragmentActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_bar_special:
-                //TODO Start New Activity To Add A Bar Special!
+                backBoolean = true;
+                Intent intent = AddBarSpecial.newIntent(this, mbarId + "");
+                startActivity(intent);
+                break;
+            case R.id.back_button:
+                this.finish();
                 break;
         }
-    }
-
-    private void displayUserDetails() {
-        User user = mUserLocalStore.getLoggedInUser();
-        mLoggedinName.setText(user.mName);
     }
 
     @Override
@@ -118,6 +140,43 @@ public class SingleBarDetailsActivity extends FragmentActivity implements View.O
         } else if (name == "LoadBarSpecials") {
             LoadBarSpecials();
         }
+    }
+
+    private String setDayOfTheWeekString(int day) {
+        //TODO SEE IF I CAN CHANGE THIS SO THERE IS NO SWITCH
+        String dayString = null;
+        switch (day) {
+            case 1:
+                dayString = "Sunday";
+                break;
+            case 2:
+                dayString = "Monday";
+                break;
+            case 3:
+                dayString = "Tuesday";
+                break;
+            case 4:
+                dayString= "Wednesday";
+                break;
+            case 5:
+                dayString = "Thursday";
+                break;
+            case 6:
+                dayString = "Friday";
+                break;
+            case 7:
+                dayString = "Saturday";
+                break;
+            default:
+                dayString = "Friday";
+                break;
+        }
+        return dayString;
+    }
+
+    private void clearSpecialList(){
+        SpecialsLab specialsLab = SpecialsLab.get(this);
+        specialsLab.removeList();
     }
 
     private void showErrorMessage(String errorMessage) {

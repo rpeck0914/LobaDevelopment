@@ -30,9 +30,9 @@ public class SpecialsLab {
         return mDayOfWeeks;
     }
 
-    public DayOfWeek getSpecialDay(String sentDayOfWeek) {
+    public DayOfWeek getSpecialDay(String date) {
         for (DayOfWeek dayOfWeek : mDayOfWeeks) {
-            if(dayOfWeek.getDayOfWeekString().equals(sentDayOfWeek)){
+            if(dayOfWeek.getDate().equals(date)) {
                 return dayOfWeek;
             }
         }

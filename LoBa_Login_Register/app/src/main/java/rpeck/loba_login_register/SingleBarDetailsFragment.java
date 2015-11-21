@@ -76,7 +76,7 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
         });
     }
 
-    private void pullBarSpecials(Bar bar) {
+    public void pullBarSpecials(Bar bar) {
         DayOfWeek dayOfWeek = new DayOfWeek(bar.mBarID);
         ServerRequests serverRequests = new ServerRequests(getActivity());
         serverRequests.fetchBarSpecialsDataAsyncTask(dayOfWeek, new GetBarSpecialsCallback() {
@@ -140,5 +140,9 @@ public class SingleBarDetailsFragment extends Fragment implements View.OnClickLi
         Intent phoneIntent = new Intent(Intent.ACTION_DIAL);
         phoneIntent.setData(Uri.parse("tel:" + mBarPhone.getText().toString()));
         startActivity(phoneIntent);
+    }
+
+    public Bar getBar() {
+        return mBar;
     }
 }

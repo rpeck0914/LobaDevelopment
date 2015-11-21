@@ -18,13 +18,20 @@
     <string name="login_button_title">Login</string>
     <string name="register_link_title">Register Here</string>
     <string name="logout_title">Log Out</string>
+    <string name="go_back_title">Back</string>
     <string name="add_bar_special_title">Add Special</string>
     <string name="specials_title">SPECIALS</string>
 
     <string name="register_button">Register</string>
+    
+    <string name="add_special_main_title">Add Your Special</string>
+    <string name="add_special_date_title">Date: </string>
+    <string name="add_special_description_title">Description: </string>
+    <string name="add_special_button_title">Submit Special</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_single_bar_details">SingleBarDetailsActivity</string>
+    <string name="title_activity_add_bar_special">AddBarSpecial</string>
 
 </resources>

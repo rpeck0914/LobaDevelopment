@@ -13,11 +13,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 public class Register extends Activity implements View.OnClickListener{
 
     //Private Variables For The Register Activity Layout

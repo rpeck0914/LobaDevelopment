@@ -50,3 +50,5 @@ http://000webhost.com
 		http://stackoverflow.com/questions/6998938/textview-setting-the-text-size-programmatically-doesnt-seem-to-work
 		http://stackoverflow.com/questions/4814124/how-to-change-margin-of-textview
 		http://stackoverflow.com/questions/3204852/android-add-a-textview-to-linear-layout-programmatically
+		http://stackoverflow.com/questions/4602902/how-to-set-the-text-color-of-textview-in-code
+		http://stackoverflow.com/questions/4602902/how-to-set-the-text-color-of-textview-in-code
