@@ -52,3 +52,5 @@ http://000webhost.com
 		http://stackoverflow.com/questions/3204852/android-add-a-textview-to-linear-layout-programmatically
 		http://stackoverflow.com/questions/4602902/how-to-set-the-text-color-of-textview-in-code
 		http://stackoverflow.com/questions/4602902/how-to-set-the-text-color-of-textview-in-code
+		https://www.youtube.com/watch?v=2wBjpn7VmsU
+		http://www.1001fonts.com/blzee-font.html#styles
