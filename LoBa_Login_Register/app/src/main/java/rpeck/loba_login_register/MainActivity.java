@@ -11,17 +11,10 @@ import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener, Communicator{
 
-<<<<<<< HEAD
     //Private Variables For The Main Activity Layout
     private TextView mLoggedInName, mLogOutLink;
 
     //Creates A Variable For UserLocalStore To Sore The Users Data Locally On Device
-=======
-    //THIS COMMENT IS A TEST. DELETE ME.
-
-    private Button mButtonLogout;
-    private EditText mEnterUserName;
->>>>>>> 852a85b4ab5cd326102f3d593d8f17a30d5bd1eb
     private UserLocalStore userLocalStore;
 
     final Handler handler = new Handler();

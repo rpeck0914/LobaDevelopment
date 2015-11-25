@@ -124,7 +124,7 @@ public class SingleBarDetailsActivity extends FragmentActivity implements View.O
         }
 
         if(foundDate != true){
-            mViewPager.setCurrentItem(0);
+            mViewPager.setCurrentItem(mDayOfWeeks.size());
         }
     }
 
