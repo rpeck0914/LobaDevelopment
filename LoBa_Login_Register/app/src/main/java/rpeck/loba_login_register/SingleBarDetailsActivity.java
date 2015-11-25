@@ -18,6 +18,7 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class SingleBarDetailsActivity extends FragmentActivity implements View.OnClickListener, LoadBarSpecialsCommunicator {
 
@@ -108,13 +109,22 @@ public class SingleBarDetailsActivity extends FragmentActivity implements View.O
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String dateString = month + "/" + day;
+
+        boolean foundDate = false;
 
         for(int i = 0; i < mDayOfWeeks.size(); i++) {
-            if(mDayOfWeeks.get(i).getDayOfWeekString().equals(setDayOfTheWeekString(day))){
+            if(mDayOfWeeks.get(i).getDate().equals(dateString)){
                 mViewPager.setCurrentItem(i);
+                foundDate = true;
                 break;
             }
+        }
+
+        if(foundDate != true){
+            mViewPager.setCurrentItem(0);
         }
     }
 
@@ -140,38 +150,6 @@ public class SingleBarDetailsActivity extends FragmentActivity implements View.O
         } else if (name == "LoadBarSpecials") {
             LoadBarSpecials();
         }
-    }
-
-    private String setDayOfTheWeekString(int day) {
-        //TODO SEE IF I CAN CHANGE THIS SO THERE IS NO SWITCH
-        String dayString = null;
-        switch (day) {
-            case 1:
-                dayString = "Sunday";
-                break;
-            case 2:
-                dayString = "Monday";
-                break;
-            case 3:
-                dayString = "Tuesday";
-                break;
-            case 4:
-                dayString= "Wednesday";
-                break;
-            case 5:
-                dayString = "Thursday";
-                break;
-            case 6:
-                dayString = "Friday";
-                break;
-            case 7:
-                dayString = "Saturday";
-                break;
-            default:
-                dayString = "Friday";
-                break;
-        }
-        return dayString;
     }
 
     private void clearSpecialList(){

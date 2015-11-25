@@ -240,12 +240,4 @@ public class CityStateSpinnerFragment extends Fragment {
         dialogBuilder.setPositiveButton("OK", null);
         dialogBuilder.show();
     }
-
-    public Spinner getStateSpinner() {
-        return mStateSpinner;
-    }
-
-    public Spinner getCitySpinner() {
-        return mCitySpinner;
-    }
 }

@@ -21,7 +21,7 @@ public class BarSpecialsArrayList {
 
     public void addSpecialToExistingDay(DayOfWeek sentDayOfWeek, Specials specials) {
         for(DayOfWeek dayOfWeek: mDaysOfWeek) {
-            if (dayOfWeek.getDayOfWeekString().equals(sentDayOfWeek.getDayOfWeekString())) {
+            if (dayOfWeek.getDate().equals(sentDayOfWeek.getDate())) {
                 dayOfWeek.addSpecials(specials);
             }
         }
